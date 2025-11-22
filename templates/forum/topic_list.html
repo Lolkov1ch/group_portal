@@ -1,0 +1,19 @@
+<ul>
+  {% for topic in topics %}
+    <li>
+      <a href="#">{{ topic.title }}</a>
+      <p>
+        Автор: 
+        {% if topic.author %}
+          {{ topic.author.username }}
+        {% else %}
+          Unknown
+        {% endif %}
+      </p>
+      <p>Відповідей: {{ topic.posts.count }}</p>
+      <p>Оновлено: {{ topic.updated_at }}</p>
+    </li>
+  {% empty %}
+    <li>Тем немає</li>
+  {% endfor %}
+</ul>
