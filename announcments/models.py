@@ -4,12 +4,16 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+from django.db import models
+from django.contrib.auth.models import User
+
 class Announcement(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст")
     published_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата публікації")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
     is_important = models.BooleanField(default=False, verbose_name="Важливе")
+    image = models.ImageField(upload_to="announcements/", blank=True, null=True, verbose_name="Фото")
 
     class Meta:
         verbose_name = "Оголошення"
