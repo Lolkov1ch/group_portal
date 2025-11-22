@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'diary',
     'forum',
     'materials',
-    'polls'
+    'polls',
 ]
 
 MIDDLEWARE = [
