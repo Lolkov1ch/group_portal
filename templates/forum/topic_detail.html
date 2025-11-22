@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ topic.title }}</h1>
+<p>Форум: {{ topic.forum.name }}</p>
+
+<h2>Відповіді</h2>
+{% for post in posts %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <p>{{ post.content|linebreaks }}</p>
+        <p>
+            <small>
+                Автор: {% if post.author %}{{ post.author.username }}{% else %}Unknown{% endif %}
+                | Дата: {{ post.created_at|date:"d.m.Y H:i" }}
+                {% if post.is_edited %} (редаговано) {% endif %}
+            </small>
+        </p>
+    </div>
+{% empty %}
+    <p>Відповіді ще відсутні.</p>
+{% endfor %}
+
+{% endblock %}
