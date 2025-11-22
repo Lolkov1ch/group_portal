@@ -1,0 +1,17 @@
+<h1>Категорії форуму</h1>
+
+<ul>
+  {% for category in categories %}
+    <li>
+      <h2>
+        <a href="{% url 'forum:topic_list_by_category' category.id %}">
+          {{ category.name }}
+        </a>
+      </h2>
+      <p>{{ category.description|default:"Немає опису" }}</p>
+      <p>Кількість тем: {{ category.topics_count }}</p>
+    </li>
+  {% empty %}
+    <li>Категорії відсутні</li>
+  {% endfor %}
+</ul>
