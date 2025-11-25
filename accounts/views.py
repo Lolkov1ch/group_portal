@@ -13,11 +13,17 @@ from .models import *
 
 class MainMenuView(ListView):
     model = UserModel
-    template_name = 'templates/main_menu.html'
+    template_name = 'main_menu.html'
     context_object_name = 'main_menu'
 
 
-class RegisterView(UserCreationForm, CreateView):
+class RegisterView(CreateView):
     template_name = 'registration/register.html'
-    form = UserCreationForm
+    form_class = UserCreationForm
     success_url = reverse_lazy('registration:login')
+    
+    def form_valid(self, form):
+        responce = super().form_valid(form)
+        login(self.request, self.object)
+        return responce
+       

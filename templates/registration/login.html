@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Portal</title>
+</head>
+<body>
+    {% extends 'main_menu.html' %}
+    
+    {% block content %}
+
+    <h2>
+        Login
+    </h2>
+    <form method="post">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">
+            Login
+        </button>
+        
+        <button href="main_menu/">
+            Back
+        </button>
+    </form>
+
+    {% endblock %}
+</body>

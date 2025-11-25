@@ -2,7 +2,28 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <a href="about:blank">
-        Free Money 0:1 Exchange!
-    </a>
 </head>
+<body>
+    {% extends 'main_menu.html' %}
+
+    {% block content %}
+
+    <h2>
+        Register
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">
+            Register
+        </button>
+        
+        <button href="main_menu/">
+            Back
+        </button>
+    </form>
+
+    {% endblock %}
+</body>
