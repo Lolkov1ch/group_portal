@@ -11,13 +11,21 @@
     <div>
         {% if user.is_authenticated %}
             {% csrf_token %}
-            <form method="post">
-                <span>
-                <button type="submit">
-                        Logout
-                </button> 
-                </span>
-            </form>
+                <form method="post">
+                    <span>
+                        <button type="submit">
+                                Logout
+                        </button> 
+                    </span>
+
+                    <span>
+                        <a href="profile/">
+                            <button>
+                                Your Profile
+                            </button>
+                        </a>
+                    </span>
+                </form>
         {% else %}
             <span>
                 <a href="register/">

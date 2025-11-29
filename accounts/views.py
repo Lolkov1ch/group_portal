@@ -12,7 +12,7 @@ from .models import *
 # Create your views here.
 
 class MainMenuView(ListView):
-    model = UserModel
+    model = ProfileModel
     template_name = 'main_menu.html'
     context_object_name = 'main_menu'
 
