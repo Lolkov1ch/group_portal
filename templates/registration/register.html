@@ -2,12 +2,9 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <title>Group Portal</title>
 </head>
 <body>
-    {% extends 'main_menu.html' %}
-
-    {% block content %}
-
     <h2>
         Register
     </h2>
@@ -19,11 +16,12 @@
         <button type="submit">
             Register
         </button>
-        
-        <button href="main_menu/">
-            Back
-        </button>
     </form>
 
-    {% endblock %}
+    <a href="/">
+        <button type="button">
+            Back to Home
+        </button>
+    </a>
 </body>
+</html>

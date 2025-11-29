@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -5,26 +6,23 @@
     <title>Group Portal</title>
 </head>
 <body>
-    {% extends 'main_menu.html' %}
-    
-    {% block content %}
-
     <h2>
         Login
     </h2>
-    <form method="post">
 
+    <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
 
         <button type="submit">
             Login
         </button>
-        
-        <button href="main_menu/">
-            Back
-        </button>
     </form>
 
-    {% endblock %}
+    <a href="/">
+        <button type="button">
+            Back to Home
+        </button>
+    </a>
 </body>
+</html>
