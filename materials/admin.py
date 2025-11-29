@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Material
+from .models import Material, MaterialCategory
 
-# Register your models here.
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ("name", "file_type", "file_link", "subject", "author", "created_at")
-    list_filter = ("file_type",)
-    search_fields = ("name", "author__username")
+    list_display = ("title", "file_type", "category__name", "engine", "subject", "author", "created_at")
+    list_filter = ("file_type", "category__title")
+    search_fields = ("title", "author__username")
     readonly_fields = ("created_at",)
+
+
+admin.site.register(MaterialCategory)
