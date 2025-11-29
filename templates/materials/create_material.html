@@ -2,28 +2,23 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Створити матеріал</title>
-    <style>
-        .form-group { margin-bottom: 15px; }
-        .error { color: red; }
-    </style>
 </head>
 <body>
-    <div style="max-width: 600px; margin: 0 auto;">
-        <h1>Додати новий навчальний матеріал</h1>
+    <div>
+        <h1>Додати новий матеріал</h1>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
-            {# Відображення форми #}
             {% for field in form %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}*{% endif %}
+                    </label>
+                    
                     {{ field }}
-                    {% if field.help_text %}
-                        <small style="color: grey">{{ field.help_text }}</small>
-                    {% endif %}
                     
                     {% for error in field.errors %}
                         <div class="error">{{ error }}</div>
