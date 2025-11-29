@@ -9,5 +9,5 @@
     </button>
 </form>
 
-<a href="{% if object %}{% url 'forum:topic_detail' object.pk %}{% else %}#{% endif %}">Назад</a>
+<a href="{% if object %}{% url 'forum:topic_detail' object.pk %}{% else %}{% url 'forum:category_list' %}{% endif %}">Назад</a>
 {% endblock %}
