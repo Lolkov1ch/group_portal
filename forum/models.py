@@ -10,6 +10,7 @@ class BaseModel(models.Model):
 class Category(models.Model):
     name = models.CharField("Назва категорії", max_length=255, unique=True)
     description = models.TextField("Опис категорії", blank=True)
+    is_open = models.BooleanField("Відкрита для створення тем", default=True)
 
     class Meta:
         verbose_name = "Категорія"
@@ -39,14 +40,17 @@ class Topic(BaseModel):
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='topics')
     title = models.CharField("Назва теми", max_length=255)
     views = models.PositiveIntegerField("Перегляди", default=0)
+    is_pinned = models.BooleanField("Закріплено", default=False)
+    is_locked = models.BooleanField("Закрито", default=False)
 
     class Meta:
         verbose_name = "Тема"
         verbose_name_plural = "Теми"
-        ordering = ['-updated_at']
+        ordering = ['is_locked', '-is_pinned', '-updated_at']
 
     def __str__(self):
         return self.title
+
 
 class Post(BaseModel):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='posts')

@@ -1,23 +1,65 @@
-{% extends "base.html" %}
-
 {% block content %}
-<h1>{{ topic.title }}</h1>
-<p>Форум: {{ topic.forum.name }}</p>
+<h1>
+    {{ topic.title }}
+    {% if topic.is_pinned %}📌{% endif %}
+    {% if topic.is_locked %}🔒{% endif %}
+</h1>
+
+<p>Категорія: 
+    <a href="{% url 'forum:topic_list_by_category' topic.forum.category.id %}">
+        {{ topic.forum.category.name }}
+    </a>
+</p>
+
+{% if user == topic.author or user.is_staff %}
+    <div style="margin-top:10px;">
+        <a href="{% url 'forum:topic_update' topic.pk %}">Редагувати</a> |
+        <a href="{% url 'forum:topic_delete' topic.pk %}">Видалити</a>
+    </div>
+{% endif %}
 
 <h2>Відповіді</h2>
 {% for post in posts %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <div>
         <p>{{ post.content|linebreaks }}</p>
-        <p>
-            <small>
-                Автор: {% if post.author %}{{ post.author.username }}{% else %}Unknown{% endif %}
-                | Дата: {{ post.created_at|date:"d.m.Y H:i" }}
-                {% if post.is_edited %} (редаговано) {% endif %}
-            </small>
-        </p>
+        <small>
+            Автор: {{ post.author.username }} | 
+            Дата: {{ post.created_at|date:"d.m.Y H:i" }}
+            {% if post.is_edited %}(редаговано){% endif %}
+        </small>
     </div>
 {% empty %}
     <p>Відповіді ще відсутні.</p>
 {% endfor %}
 
+{% if user.is_authenticated %}
+    {% if not topic.is_locked %}
+        <h3>Додати відповідь</h3>
+        <form action="{% url 'forum:topic_detail' topic.pk %}" method="post">
+            {% csrf_token %}
+            {{ reply_form.as_p }}
+            <button type="submit">Відправити</button>
+        </form>
+    {% else %}
+        <p>Тема закрита для нових відповідей.</p>
+    {% endif %}
+{% endif %}
+
+{% if user.is_staff %}
+    <div style="margin-top:10px;">
+        <form action="{% url 'forum:toggle_pin' topic.pk %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">
+                {% if topic.is_pinned %}Відкріпити{% else %}Закріпити{% endif %} 📌
+            </button>
+        </form>
+
+        <form action="{% url 'forum:toggle_lock' topic.pk %}" method="post" style="display:inline; margin-left:8px;">
+            {% csrf_token %}
+            <button type="submit">
+                {% if topic.is_locked %}Відкрити{% else %}Закрити{% endif %} 🔒
+            </button>
+        </form>
+    </div>
+{% endif %}
 {% endblock %}

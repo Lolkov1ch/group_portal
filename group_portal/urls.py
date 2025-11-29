@@ -21,11 +21,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('forum/', include('forum.urls', namespace='forum')),
     path('announcments/', include('announcments.urls', namespace='announcments')),  
-    # path('diary/', include('diary.urls', namespace='diary')),
+    path('diary/', include('diary.urls', namespace='diary')),
     path('materials/', include('materials.urls', namespace='materials')),   
-    # path('polls/', include('polls.urls', namespace='polls')),
-    # path('', include('core.urls', namespace='core')),
+    path('polls/', include('polls.urls', namespace='polls')),
+    path('', include('core.urls', namespace='core')),
     # path('events/', include('events.urls', namespace='events')),
     # path('portfolio/', include('portfolio.urls', namespace='portfolio')),   
     # path('accounts/', include('accounts.urls', namespace='accounts')),
 ]
+
+# Розкоментуйте коли будете працювати з цими апками

@@ -1,19 +1,30 @@
+{% block content %}
+<h1>Теми категорії: {{ category.name }}</h1>
+
+{% if user.is_authenticated %}
+    {% if category.is_open %}
+        <p><a href="{% url 'forum:topic_create' category.id %}">Створити тему</a></p>
+    {% else %}
+        <p>Категорія закрита для нових тем.</p>
+    {% endif %}
+{% endif %}
+
 <ul>
   {% for topic in topics %}
     <li>
-      <a href="#">{{ topic.title }}</a>
+      <h2>
+        <a href="{% url 'forum:topic_detail' topic.pk %}">{{ topic.title }}</a>
+        {% if topic.is_pinned %} 📌 {% endif %}
+        {% if topic.is_locked %} 🔒 {% endif %}
+      </h2>
       <p>
-        Автор: 
-        {% if topic.author %}
-          {{ topic.author.username }}
-        {% else %}
-          Unknown
-        {% endif %}
+        Автор: {% if topic.author %}{{ topic.author.username }}{% else %}Unknown{% endif %}
       </p>
-      <p>Відповідей: {{ topic.posts.count }}</p>
-      <p>Оновлено: {{ topic.updated_at }}</p>
+      <p>Відповіді: {{ topic.posts.count }}</p>
+      <p>Оновлено: {{ topic.updated_at|date:"d.m.Y H:i" }}</p>
     </li>
   {% empty %}
     <li>Тем немає</li>
   {% endfor %}
 </ul>
+{% endblock %}
