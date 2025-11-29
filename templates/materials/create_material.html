@@ -8,7 +8,6 @@
     <div>
         <h1>Додати новий матеріал</h1>
 
-        {# ВАЖЛИВО: enctype="multipart/form-data" необхідний для завантаження файлів #}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
