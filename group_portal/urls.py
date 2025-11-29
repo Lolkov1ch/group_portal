@@ -25,7 +25,9 @@ urlpatterns = [
     path('materials/', include('materials.urls', namespace='materials')),   
     path('polls/', include('polls.urls', namespace='polls')),
     path('', include('core.urls', namespace='core')),
-    path('events/', include('events.urls', namespace='events')),
-    path('portfolio/', include('portfolio.urls', namespace='portfolio')),   
-    path('accounts/', include('accounts.urls', namespace='accounts')),
+    # path('events/', include('events.urls', namespace='events')),
+    # path('portfolio/', include('portfolio.urls', namespace='portfolio')),   
+    # path('accounts/', include('accounts.urls', namespace='accounts')),
 ]
+
+# Розкоментуйте коли будете працювати з цими апками

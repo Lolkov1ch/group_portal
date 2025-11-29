@@ -1,4 +1,13 @@
+{% block content %}
 <h1>Категорії форуму</h1>
+
+{% if user.is_staff %}
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'forum:forum_create' %}" class="btn btn-primary">
+            Створити форум
+        </a>
+    </div>
+{% endif %}
 
 <ul>
   {% for category in categories %}
@@ -10,8 +19,16 @@
       </h2>
       <p>{{ category.description|default:"Немає опису" }}</p>
       <p>Кількість тем: {{ category.topics_count }}</p>
+      <p>Форуми: 
+        {% for forum in category.forums.all %}
+            <a href="#">{{ forum.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Немає форумів
+        {% endfor %}
+      </p>
     </li>
   {% empty %}
     <li>Категорії відсутні</li>
   {% endfor %}
 </ul>
+{% endblock %}

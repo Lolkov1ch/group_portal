@@ -1,0 +1,13 @@
+{% block content %}
+<h2>{% if object %}Редагувати тему{% else %}Нова тема{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">
+        {% if object %}Зберегти{% else %}Створити{% endif %}
+    </button>
+</form>
+
+<a href="{% if object %}{% url 'forum:topic_detail' object.pk %}{% else %}#{% endif %}">Назад</a>
+{% endblock %}
