@@ -3,7 +3,7 @@ from .models import Material, MaterialCategory
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ("title", "file_type", "category__name", "engine", "subject", "author", "created_at")
+    list_display = ("title", "file_type", "category", "engine", "author", "created_at")
     list_filter = ("file_type", "category__title")
     search_fields = ("title", "author__username")
     readonly_fields = ("created_at",)
