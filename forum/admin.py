@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Category, Forum, Topic, Post, Attachment, Like, Dislike, ForumSettings
+from .models import Category, Forum, Topic, Post, Attachment, Like, Dislike, ForumSettings, Tag
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'color']
+    prepopulated_fields = {'slug': ('name',)}
 
 admin.site.register(Category)
 admin.site.register(Forum)

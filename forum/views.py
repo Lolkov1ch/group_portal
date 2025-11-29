@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Category, Topic, Forum, Attachment, ForumSettings, Like, Dislike, Post
+from .models import Category, Topic, Forum, Attachment, ForumSettings, Like, Dislike, Post, Tag
 from django.http import HttpResponseForbidden
 from .forms import PostForm, TopicForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -29,28 +29,42 @@ class TopicListByCategoryView(ListView):
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, pk=self.kwargs.get('category_id'))
+        queryset = Topic.objects.filter(forum__category=self.category)
+    
+        tag_slug = self.request.GET.get('tag')
+        if tag_slug:
+            self.selected_tag = get_object_or_404(Tag, slug=tag_slug)
+            queryset = queryset.filter(tags=self.selected_tag)
+        else:
+            self.selected_tag = None
+        
         return (
-            Topic.objects.filter(forum__category=self.category)
+            queryset
             .select_related('author', 'forum')
-            .prefetch_related('posts')
+            .prefetch_related('posts', 'tags')
             .order_by('-is_pinned', '-updated_at')
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
+        context['all_tags'] = Tag.objects.all()
+        context['selected_tag'] = getattr(self, 'selected_tag', None)
         return context
 
 class TopicDetailView(View):
     def get(self, request, pk):
-        topic = get_object_or_404(Topic.objects.select_related('forum__category', 'author'), pk=pk)
+        topic = get_object_or_404(
+            Topic.objects.select_related('forum__category', 'author').prefetch_related('tags'), 
+            pk=pk
+        )
         forum_settings, _ = ForumSettings.objects.get_or_create(pk=1)
         
         posts_prefetch = Prefetch(
             'posts',
             Post.objects.select_related('author').prefetch_related('attachments', 'likes', 'dislikes')
         )
-        topic = Topic.objects.prefetch_related(posts_prefetch).get(pk=pk)
+        topic = Topic.objects.prefetch_related(posts_prefetch, 'tags').get(pk=pk)
         posts = topic.posts.all()
         
         form = PostForm()
@@ -86,7 +100,7 @@ class TopicDetailView(View):
                 for f in files:
                     try:
                         attachment = Attachment(post=post, file=f)
-                        attachment.full_clean()  # Викликає валідацію
+                        attachment.full_clean()
                         attachment.save()
                     except Exception as e:
                         messages.warning(request, f"Не вдалося завантажити {f.name}: {str(e)}")
@@ -214,10 +228,8 @@ class LikePostView(LoginRequiredMixin, View):
             messages.error(request, "Лайки вимкнено")
             return redirect("forum:topic_detail", pk=post.topic.pk)
 
-        # Видаляємо дизлайк, якщо є
         Dislike.objects.filter(user=request.user, post=post).delete()
 
-        # Перемикаємо лайк
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             like.delete()
@@ -237,10 +249,8 @@ class DislikePostView(LoginRequiredMixin, View):
             messages.error(request, "Дизлайки вимкнено")
             return redirect("forum:topic_detail", pk=post.topic.pk)
 
-        # Видаляємо лайк, якщо є
         Like.objects.filter(user=request.user, post=post).delete()
 
-        # Перемикаємо дизлайк
         dislike, created = Dislike.objects.get_or_create(user=request.user, post=post)
         if not created:
             dislike.delete()

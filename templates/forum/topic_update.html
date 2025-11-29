@@ -1,15 +1,32 @@
 {% block content %}
-<h1>
-    {% if object %}Редагувати тему{% else %}Нова тема{% endif %}
-</h1>
+<h2>{% if object %}Редагувати тему{% else %}Нова тема{% endif %}</h2>
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    
+    <div>
+        {{ form.title.label_tag }}
+        {{ form.title }}
+        {% if form.title.errors %}
+            <div style="color: red;">{{ form.title.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div>
+        {{ form.tags.label_tag }}
+        <div style="margin-left: 10px;">
+            {{ form.tags }}
+        </div>
+        {% if form.tags.errors %}
+            <div style="color: red;">{{ form.tags.errors }}</div>
+        {% endif %}
+        <small>Оберіть один або кілька тегів для теми</small>
+    </div>
+    
     <button type="submit" class="btn btn-primary">
         {% if object %}Зберегти{% else %}Створити{% endif %}
     </button>
-    <a href="{% if object %}{% url 'forum:topic_detail' object.pk %}{% else %}#{% endif %}" style="margin-left:10px;">Скасувати</a>
 </form>
 
+<a href="{% if object %}{% url 'forum:topic_detail' object.pk %}{% else %}{% url 'forum:category_list' %}{% endif %}">Назад</a>
 {% endblock %}

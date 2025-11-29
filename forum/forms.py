@@ -1,11 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from .models import Post, Topic, Attachment
+from .models import Post, Topic, Attachment, Tag
 
 class PostForm(forms.ModelForm):
-    # Видаляємо поле attachments з форми зовсім
-    # Файли будемо обробляти напряму через request.FILES
-    
     class Meta:
         model = Post
         fields = ["content"]
@@ -18,9 +15,16 @@ class PostForm(forms.ModelForm):
         }
 
 class TopicForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Теги"
+    )
+    
     class Meta:
         model = Topic
-        fields = ["title"]
+        fields = ["title", "tags"]
         widgets = {
             "title": forms.TextInput(attrs={
                 "placeholder": "Назва теми"
