@@ -1,65 +1,131 @@
 {% block content %}
-<h1>
-    {{ topic.title }}
-    {% if topic.is_pinned %}📌{% endif %}
-    {% if topic.is_locked %}🔒{% endif %}
-</h1>
+<div>
+    <h1>
+        {{ topic.title }}
+        {% if topic.is_pinned %}📌{% endif %}
+        {% if topic.is_locked %}🔒{% endif %}
+    </h1>
+    
+    <p>
+        Категорія: 
+        <a href="{% url 'forum:topic_list_by_category' topic.forum.category.id %}">
+            {{ topic.forum.category.name }}
+        </a>
+    </p>
 
-<p>Категорія: 
-    <a href="{% url 'forum:topic_list_by_category' topic.forum.category.id %}">
-        {{ topic.forum.category.name }}
-    </a>
-</p>
-
-{% if user == topic.author or user.is_staff %}
-    <div style="margin-top:10px;">
-        <a href="{% url 'forum:topic_update' topic.pk %}">Редагувати</a> |
-        <a href="{% url 'forum:topic_delete' topic.pk %}">Видалити</a>
-    </div>
-{% endif %}
-
-<h2>Відповіді</h2>
-{% for post in posts %}
-    <div>
-        <p>{{ post.content|linebreaks }}</p>
-        <small>
-            Автор: {{ post.author.username }} | 
-            Дата: {{ post.created_at|date:"d.m.Y H:i" }}
-            {% if post.is_edited %}(редаговано){% endif %}
-        </small>
-    </div>
-{% empty %}
-    <p>Відповіді ще відсутні.</p>
-{% endfor %}
-
-{% if user.is_authenticated %}
-    {% if not topic.is_locked %}
-        <h3>Додати відповідь</h3>
-        <form action="{% url 'forum:topic_detail' topic.pk %}" method="post">
-            {% csrf_token %}
-            {{ reply_form.as_p }}
-            <button type="submit">Відправити</button>
-        </form>
-    {% else %}
-        <p>Тема закрита для нових відповідей.</p>
+    {% if user == topic.author or user.is_staff %}
+        <div>
+            <a href="{% url 'forum:topic_update' topic.pk %}">Редагувати</a> |
+            <a href="{% url 'forum:topic_delete' topic.pk %}">Видалити</a>
+        </div>
     {% endif %}
-{% endif %}
 
-{% if user.is_staff %}
-    <div style="margin-top:10px;">
-        <form action="{% url 'forum:toggle_pin' topic.pk %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">
-                {% if topic.is_pinned %}Відкріпити{% else %}Закріпити{% endif %} 📌
-            </button>
-        </form>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
-        <form action="{% url 'forum:toggle_lock' topic.pk %}" method="post" style="display:inline; margin-left:8px;">
-            {% csrf_token %}
-            <button type="submit">
-                {% if topic.is_locked %}Відкрити{% else %}Закрити{% endif %} 🔒
-            </button>
-        </form>
-    </div>
-{% endif %}
+    <h2>Відповіді</h2>
+
+    {% for post in posts %}
+        <div>
+            <p><strong>{{ post.author.username }}</strong> - {{ post.created_at|date:"d.m.Y H:i" }} {% if post.is_edited %}(редаговано){% endif %}</p>
+            
+            <p>{{ post.content|linebreaks }}</p>
+
+            {% if forum_settings.enable_attachments and post.attachments.all %}
+                <div>
+                    <strong>Вкладення:</strong>
+                    {% for att in post.attachments.all %}
+                        {% if att.is_image %}
+                            <div>
+                                <a href="{{ att.file.url }}" target="_blank">
+                                    <img src="{{ att.file.url }}" alt="Зображення" style="max-width:200px;">
+                                </a>
+                            </div>
+                        {% else %}
+                            <div>
+                                <a href="{{ att.file.url }}" download>📎 {{ att.file.name }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if forum_settings.enable_likes or forum_settings.enable_dislikes %}
+                <div>
+                    {% if forum_settings.enable_likes %}
+                        <form action="{% url 'forum:like_post' post.pk %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">👍 {{ post.likes.count }}</button>
+                        </form>
+                    {% endif %}
+
+                    {% if forum_settings.enable_dislikes %}
+                        <form action="{% url 'forum:dislike_post' post.pk %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">👎 {{ post.dislikes.count }}</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <hr>
+        </div>
+    {% empty %}
+        <p>Відповідей ще немає.</p>
+    {% endfor %}
+
+        {% if user.is_authenticated %}
+        {% if not topic.is_locked %}
+            <h3>Додати відповідь</h3>
+            <form action="{% url 'forum:topic_detail' topic.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div>
+                    {{ reply_form.content.label_tag }}
+                    {{ reply_form.content }}
+                    {% if reply_form.content.errors %}
+                        <div style="color: red;">{{ reply_form.content.errors }}</div>
+                    {% endif %}
+                </div>
+
+                {% if forum_settings.enable_attachments %}
+                    <div>
+                        <label for="id_attachments">Вкладення:</label>
+                        <input type="file" name="attachments" id="id_attachments" multiple 
+                            accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.rar,.7z,.txt,.mp4">
+                        <small>Можна обрати кілька файлів. Дозволені: png, jpg, jpeg, gif, pdf, zip, rar, 7z, txt, mp4 (макс. 10 МБ кожен)</small>
+                        <div id="file-list"></div>
+                    </div>
+                {% endif %}
+
+                <button type="submit">📤 Відправити</button>
+            </form>
+        {% else %}
+            <p>🔒 Тема закрита для нових відповідей.</p>
+        {% endif %}
+    {% else %}
+        <p>Щоб залишити відповідь, будь ласка, <a href="{% url 'login' %}?next={{ request.path }}">увійдіть</a>.</p>
+    {% endif %}
+
+    {% if user.is_staff %}
+        <div>
+            <h4>Дії модератора</h4>
+            <form action="{% url 'forum:toggle_pin' topic.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">
+                    {% if topic.is_pinned %}Відкріпити{% else %}Закріпити{% endif %} 📌
+                </button>
+            </form>
+
+            <form action="{% url 'forum:toggle_lock' topic.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">
+                    {% if topic.is_locked %}Відкрити{% else %}Закрити{% endif %} 🔒
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
