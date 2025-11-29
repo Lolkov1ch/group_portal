@@ -2,8 +2,8 @@
 <h1>Категорії форуму</h1>
 
 {% if user.is_staff %}
-    <div style="margin-bottom: 20px;">
-        <a href="{% url 'forum:forum_create' %}" class="btn btn-primary">
+    <div>
+        <a href="{% url 'forum:forum_create' %}">
             Створити форум
         </a>
     </div>

@@ -9,6 +9,23 @@
     {% endif %}
 {% endif %}
 
+<div>
+    <strong>Фільтрувати за тегами:</strong>
+    <a href="{% url 'forum:topic_list_by_category' category.id %}" 
+       style="{% if not selected_tag %}font-weight: bold; text-decoration: underline;{% endif %}">
+        Всі
+    </a>
+    {% for tag in all_tags %}
+        | <a href="{% url 'forum:topic_list_by_category' category.id %}?tag={{ tag.slug }}">
+            #{{ tag.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% if selected_tag %}
+    <p> <strong>#{{ selected_tag.name }}</strong></p>
+{% endif %}
+
 <ul>
   {% for topic in topics %}
     <li>
@@ -17,6 +34,17 @@
         {% if topic.is_pinned %} 📌 {% endif %}
         {% if topic.is_locked %} 🔒 {% endif %}
       </h2>
+      
+      {% if topic.tags.all %}
+        <div>
+          {% for tag in topic.tags.all %}
+            <a href="{% url 'forum:topic_list_by_category' category.id %}?tag={{ tag.slug }}">
+              #{{ tag.name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
       <p>
         Автор: {% if topic.author %}{{ topic.author.username }}{% else %}Unknown{% endif %}
       </p>
@@ -24,7 +52,13 @@
       <p>Оновлено: {{ topic.updated_at|date:"d.m.Y H:i" }}</p>
     </li>
   {% empty %}
-    <li>Тем немає</li>
+    <li>
+      {% if selected_tag %}
+        Тем з тегом "{{ selected_tag.name }}" немає
+      {% else %}
+        Тем немає
+      {% endif %}
+    </li>
   {% endfor %}
 </ul>
 {% endblock %}

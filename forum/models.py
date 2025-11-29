@@ -35,7 +35,7 @@ class Category(models.Model):
 
 
 class Forum(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='forums')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='forums', null=True, blank=True)
     name = models.CharField("Назва форуму", max_length=255)
     description = models.TextField("Опис форуму", blank=True)
 
@@ -46,6 +46,26 @@ class Forum(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Tag(models.Model):
+    name = models.CharField("Назва тегу", max_length=50, unique=True)
+    slug = models.SlugField("Slug", max_length=50, unique=True)
+    color = models.CharField("Колір", max_length=7, default="#007bff", help_text="Hex-колір, наприклад #FF5733")
+    
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            from unidecode import unidecode
+            self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
 
 
 class Topic(BaseModel):
@@ -54,12 +74,13 @@ class Topic(BaseModel):
     views = models.PositiveIntegerField("Перегляди", default=0)
     is_pinned = models.BooleanField("Закріплено", default=False)
     is_locked = models.BooleanField("Закрито", default=False)
-
+    tags = models.ManyToManyField(Tag, related_name='topics', blank=True, verbose_name="Теги")
+    
     class Meta:
         verbose_name = "Тема"
         verbose_name_plural = "Теми"
         ordering = ['is_locked', '-is_pinned', '-updated_at']
-
+    
     def __str__(self):
         return self.title
 
@@ -169,6 +190,8 @@ class Attachment(models.Model):
 
     def __str__(self):
         return self.file.name if self.file else "No file"
+
+
 
 @receiver(post_delete, sender=Attachment)
 def delete_attachment_file_on_delete(sender, instance, **kwargs):

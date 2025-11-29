@@ -4,7 +4,7 @@
 <form method="post" action="{% url 'forum:forum_create' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" name="submit" class="btn btn-primary">Створити</button>
+    <button type="submit" name="submit">Створити</button>
 </form>
 
 <a href="{% url 'forum:category_list' %}">Назад</a>

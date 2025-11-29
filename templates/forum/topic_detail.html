@@ -5,6 +5,16 @@
         {% if topic.is_pinned %}📌{% endif %}
         {% if topic.is_locked %}🔒{% endif %}
     </h1>
+
+    {% if topic.tags.all %}
+        <div>
+          {% for tag in topic.tags.all %}
+            <a href="{% url 'forum:topic_list_by_category' topic.forum.category.id %}?tag={{ tag.slug }}">
+              #{{ tag.name }}
+            </a>
+          {% endfor %}
+        </div>
+    {% endif %}
     
     <p>
         Категорія: 
@@ -56,14 +66,14 @@
             {% if forum_settings.enable_likes or forum_settings.enable_dislikes %}
                 <div>
                     {% if forum_settings.enable_likes %}
-                        <form action="{% url 'forum:like_post' post.pk %}" method="post" style="display:inline;">
+                        <form action="{% url 'forum:like_post' post.pk %}" method="post">
                             {% csrf_token %}
                             <button type="submit">👍 {{ post.likes.count }}</button>
                         </form>
                     {% endif %}
 
                     {% if forum_settings.enable_dislikes %}
-                        <form action="{% url 'forum:dislike_post' post.pk %}" method="post" style="display:inline;">
+                        <form action="{% url 'forum:dislike_post' post.pk %}" method="post">
                             {% csrf_token %}
                             <button type="submit">👎 {{ post.dislikes.count }}</button>
                         </form>
@@ -76,7 +86,7 @@
         <p>Відповідей ще немає.</p>
     {% endfor %}
 
-        {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
         {% if not topic.is_locked %}
             <h3>Додати відповідь</h3>
             <form action="{% url 'forum:topic_detail' topic.pk %}" method="post" enctype="multipart/form-data">
@@ -112,14 +122,14 @@
     {% if user.is_staff %}
         <div>
             <h4>Дії модератора</h4>
-            <form action="{% url 'forum:toggle_pin' topic.pk %}" method="post" style="display:inline;">
+            <form action="{% url 'forum:toggle_pin' topic.pk %}" method="post">
                 {% csrf_token %}
                 <button type="submit">
                     {% if topic.is_pinned %}Відкріпити{% else %}Закріпити{% endif %} 📌
                 </button>
             </form>
 
-            <form action="{% url 'forum:toggle_lock' topic.pk %}" method="post" style="display:inline;">
+            <form action="{% url 'forum:toggle_lock' topic.pk %}" method="post">
                 {% csrf_token %}
                 <button type="submit">
                     {% if topic.is_locked %}Відкрити{% else %}Закрити{% endif %} 🔒
