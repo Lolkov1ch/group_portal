@@ -194,3 +194,5 @@ def delete_old_file_on_change(sender, instance, **kwargs):
         pass
     except Exception as e:
         print(f"Помилка при видаленні старого файлу: {e}")
+
+
