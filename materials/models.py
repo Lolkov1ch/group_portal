@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+import re
+
 class MaterialCategory(models.Model):
     title = models.CharField(max_length=128)
 
@@ -87,3 +89,37 @@ class Material(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.file_type}"
+    
+    @property
+    def youtube_id(self):
+        if not self.file_link:
+            return None
+        regex = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
+        match = re.search(regex, self.file_link)
+        return match.group(1) if match else None
+    
+    def get_icon(self):
+        """Повертає CSS-клас іконки (Bootstrap Icons)"""
+        if self.file_type == self.FileTypeChoices.VIDEO:
+            return "bi bi-youtube"
+        elif self.file_type == self.FileTypeChoices.FILE:
+            if self.file_upload and self.file_upload.name.endswith('.zip'):
+                return "bi bi-file-earmark-zip"
+            return "bi bi-file-earmark-text"
+        elif self.file_type == self.FileTypeChoices.LINK:
+            return "bi bi-link-45deg"
+        return "bi bi-question-circle"
+
+    def get_badge_color(self):
+        """Повертає Bootstrap-клас кольору для бейджа"""
+        match self.engine:
+            case self.EngineChoices.UNITY:
+                return "bg-secondary"         # Сірий
+            case self.EngineChoices.UNREAL:
+                return "bg-dark"              # Чорний
+            case self.EngineChoices.GODOT:
+                return "bg-primary"           # Синій
+            case self.EngineChoices.PYGAME:
+                return "bg-warning text-dark" # Жовтий
+            case _:
+                return "bg-info"
