@@ -5,7 +5,7 @@ from django.conf import settings
 
 # Create your models here.
 class GenreItem(models.Model):
-    genre = models.CharField(max_length=200, null=True)
+    genre = models.CharField(max_length=200, blank=True)
 
 
 class ProfileModel(models.Model):
