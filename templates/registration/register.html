@@ -1,9 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Реєстрація - GameDev Club{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Реєстрація - GameDev Club{% endblock %} {% block content %}
 <div class="auth-page">
     <div class="card auth-card">
         <div class="card-body p-5">
@@ -13,124 +8,58 @@
                 <p class="text-muted">Створіть акаунт в GameDev Club</p>
             </div>
 
-                    <form method="post">
-                        {% csrf_token %}
+            <form method="post">
+                {% csrf_token %} {% if form.errors %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> Будь ласка, виправте помилки нижче
+                </div>
+                {% endif %}
 
-                        {% if form.errors %}
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-circle"></i>
-                                Будь ласка, виправте помилки нижче
-                            </div>
-                        {% endif %}
-
-                        <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">
-                                <i class="fas fa-user"></i> Ім'я користувача
-                            </label>
-                            {{ form.username }}
-                            {% if form.username.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.username.errors }}
-                                </div>
-                            {% endif %}
-                            <small class="form-text text-muted">
-                                150 символів або менше. Тільки літери, цифри та @/./+/-/_
-                            </small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.password1.id_for_label }}" class="form-label">
-                                <i class="fas fa-lock"></i> Пароль
-                            </label>
-                            {{ form.password1 }}
-                            {% if form.password1.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.password1.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="{{ form.password2.id_for_label }}" class="form-label">
-                                <i class="fas fa-lock"></i> Підтвердження паролю
-                            </label>
-                            {{ form.password2 }}
-                            {% if form.password2.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.password2.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 mb-3">
-                            <i class="fas fa-user-plus"></i> Зареєструватися
-                        </button>
-
-                        <div class="text-center">
-                            <p class="text-muted mb-2">Вже маєте акаунт?</p>
-                            <a href="{% url 'accounts:login' %}" class="btn btn-secondary w-100">
-                                <i class="fas fa-sign-in-alt"></i> Увійти
-                            </a>
+                <div class="mb-3">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="fas fa-user"></i> Ім'я користувача
+                    </label> {{ form.username }} {% if form.username.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.username.errors }}
                     </div>
-                </form>
-            </div>
+                    {% endif %}
+                    <small class="form-text text-muted">
+                        150 символів або менше. Тільки літери, цифри та @/./+/-/_
+                    </small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Пароль
+                    </label> {{ form.password1 }} {% if form.password1.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.password1.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Підтвердження паролю
+                    </label> {{ form.password2 }} {% if form.password2.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.password2.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="fas fa-user-plus"></i> Зареєструватися
+                </button>
+
+                <div class="text-center">
+                    <p class="text-muted mb-2">Вже маєте акаунт?</p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-secondary w-100">
+                        <i class="fas fa-sign-in-alt"></i> Увійти
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
-
-<style>
-.auth-page {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 0;
-}
-
-.auth-card {
-    background: rgba(21, 26, 48, 0.95);
-    border: 2px solid var(--accent-purple);
-    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.auth-icon {
-    font-size: 4rem;
-    color: var(--accent-purple);
-    margin-bottom: 1rem;
-}
-
-.auth-title {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    white-space: nowrap;
-}
-
-.auth-card .form-control {
-    padding: 0.8rem;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.auth-card .form-label {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    display: block;
-    width: 100%;
-}
-
-.auth-card .form-label i {
-    color: var(--accent-cyan);
-}
-
-.auth-card .mb-3,
-.auth-card .mb-4 {
-    width: 100%;
-}
-</style>
+</div>
 {% endblock %}

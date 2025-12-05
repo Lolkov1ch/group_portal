@@ -1,23 +1,34 @@
-/* ============================================
-   GameDev Club - Темна геймерська тема
-   ============================================ */
+/* ===== ЗМІННІ ТЕМИ ===== */
 
-/* === Кольорова палітра === */
 :root {
-    --primary-dark: #0a0e27;
-    --secondary-dark: #151a30;
-    --accent-purple: #8b5cf6;
-    --accent-cyan: #06b6d4;
-    --accent-pink: #ec4899;
-    --text-light: #e5e7eb;
-    --text-muted: #9ca3af;
-    --border-color: #1f2937;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+    --bg-primary: #0f360f;
+    --bg-secondary: #091f09;
+    --accent-1: #73f65c;
+    --accent-2: #06d428;
+    --accent-3: #9fec48;
+    --text-main: #e0ffe0;
+    --text-muted: #a0d0a0;
+    --border: rgba(115, 246, 92, 0.3);
+    --card-bg: rgba(21, 48, 24, 0.8);
+    --hover-bg: rgba(115, 246, 92, 0.15);
 }
 
-/* === Базові стилі === */
+[data-theme="light"] {
+    --bg-primary: #f0f9f0;
+    --bg-secondary: #e1f3e1;
+    --accent-1: #2d8a1f;
+    --accent-2: #1f6b14;
+    --accent-3: #4aa536;
+    --text-main: #1a3d1a;
+    --text-muted: #4a6b4a;
+    --border: rgba(45, 138, 31, 0.3);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --hover-bg: rgba(45, 138, 31, 0.1);
+}
+
+
+/* ===== БАЗОВІ СТИЛІ ===== */
+
 * {
     margin: 0;
     padding: 0;
@@ -26,72 +37,80 @@
 
 body {
     font-family: 'Rajdhani', sans-serif;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+    background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
     background-attachment: fixed;
-    color: var(--text-light);
+    color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* === Шапка навігації === */
+
+/* ===== НАВІГАЦІЯ ===== */
+
 .navbar-custom {
-    background: rgba(10, 14, 39, 0.98) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid var(--accent-purple);
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-}
-
-.navbar-custom .navbar {
-    padding: 0.8rem 0;
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(15px);
+    border-bottom: 2px solid var(--accent-1);
+    box-shadow: 0 4px 20px rgba(115, 246, 92, 0.2);
 }
 
 .navbar-brand {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.8rem;
     font-weight: 900;
-    color: var(--text-light) !important;
+    color: var(--text-main) !important;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
 }
 
 .navbar-brand i {
-    color: var(--accent-purple);
+    color: var(--accent-1);
     font-size: 2rem;
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.navbar-brand:hover {
-    transform: translateY(-2px);
-    text-shadow: 0 0 20px var(--accent-purple);
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .logo-text {
-    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* === Навігаційні посилання === */
 .nav-link {
-    color: #ffffff !important;
+    color: var(--text-main) !important;
     font-weight: 600;
-    font-size: 1rem;
-    padding: 0.6rem 1.2rem !important;
+    padding: 0.6rem 1rem !important;
     margin: 0 0.2rem;
     border-radius: 8px;
     transition: all 0.3s ease;
-    position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--hover-bg);
+    border: 1px solid transparent;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background: var(--hover-bg);
+    border-color: var(--accent-1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(115, 246, 92, 0.3);
 }
 
 .nav-link i {
@@ -99,82 +118,96 @@ body {
     transition: transform 0.3s ease;
 }
 
-.nav-link:hover {
-    background: rgba(139, 92, 246, 0.3);
-    border-color: var(--accent-purple);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.4);
-    color: #ffffff !important;
-}
-
 .nav-link:hover i {
     transform: scale(1.2);
 }
 
-.nav-link-login {
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)) !important;
-    border: none !important;
-    border-radius: 20px;
-    padding: 0.6rem 1.5rem !important;
-    color: #ffffff !important;
-    font-weight: 700;
-}
-
-.nav-link-login:hover {
-    box-shadow: 0 0 20px var(--accent-purple);
-    transform: translateY(-3px);
-}
-
+.nav-link-login,
 .nav-link-profile {
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)) !important;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-3)) !important;
     border: none !important;
+    color: #fff !important;
+    font-weight: 700;
     border-radius: 20px;
     padding: 0.6rem 1.5rem !important;
-    color: #ffffff !important;
-    font-weight: 700;
 }
 
-.nav-link-logout {
-    background: linear-gradient(135deg, var(--accent-pink), var(--danger)) !important;
-    border: none !important;
-    border-radius: 20px;
-    padding: 0.6rem 1.5rem !important;
-    color: #ffffff !important;
-    font-weight: 700;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.nav-link-logout:hover {
-    box-shadow: 0 0 20px var(--danger);
+.nav-link-login:hover,
+.nav-link-profile:hover {
     transform: translateY(-3px);
-    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(115, 246, 92, 0.4);
 }
 
-/* === Кнопка мобільного меню === */
-.navbar-toggler {
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 0.75rem;
+.dropdown-menu {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(115, 246, 92, 0.2);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-.navbar-toggler:focus {
-    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.5);
+.dropdown-item {
+    color: var(--text-main);
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
 }
 
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: var(--hover-bg);
+    color: var(--accent-1);
+    transform: translateX(5px);
 }
 
-/* === Основний контент === */
+.dropdown-item i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-divider {
+    border-color: var(--border);
+    margin: 0.5rem 0;
+}
+
+.theme-toggle {
+    background: var(--hover-bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--accent-1);
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+}
+
+.theme-toggle:hover {
+    background: var(--accent-1);
+    color: #fff;
+    transform: rotate(180deg);
+    box-shadow: 0 4px 12px rgba(115, 246, 92, 0.4);
+}
+
+
+/* ===== КОНТЕНТ ===== */
+
 .main-content {
     flex: 1;
     padding: 2rem 0;
 }
 
-/* === Карточки === */
 .card {
-    background: rgba(21, 26, 48, 0.8);
-    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 12px;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
@@ -182,87 +215,161 @@ body {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-    border-color: var(--accent-purple);
+    box-shadow: 0 10px 30px rgba(115, 246, 92, 0.2);
+    border-color: var(--accent-1);
 }
 
 .card-header {
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-    border-bottom: none;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
     color: white;
     font-weight: 700;
     font-size: 1.2rem;
+    border-radius: 12px 12px 0 0 !important;
 }
 
-/* === Кнопки === */
-.btn-primary {
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-    border: none;
+.card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+
+/* ===== КНОПКИ ===== */
+
+.btn {
     border-radius: 8px;
     padding: 0.6rem 1.5rem;
     font-weight: 600;
     transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+    border: none;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+    box-shadow: 0 8px 20px rgba(115, 246, 92, 0.4);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    background: var(--hover-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: var(--accent-cyan);
+    background: var(--hover-bg);
+    border-color: var(--accent-1);
+    color: var(--accent-1);
 }
 
-/* === Повідомлення === */
-.custom-alert {
+.btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 30px;
+    box-shadow: 0 8px 20px rgba(115, 246, 92, 0.4);
+}
+
+
+/* ===== АЛЕРТИ ===== */
+
+.alert {
     border-radius: 12px;
-    border: none;
     backdrop-filter: blur(10px);
     font-weight: 600;
+    border-left-width: 4px;
 }
 
 .alert-success {
     background: rgba(16, 185, 129, 0.2);
-    color: var(--success);
-    border-left: 4px solid var(--success);
+    color: #10b981;
+    border-left-color: #10b981;
 }
 
 .alert-warning {
     background: rgba(245, 158, 11, 0.2);
-    color: var(--warning);
-    border-left: 4px solid var(--warning);
+    color: #f59e0b;
+    border-left-color: #f59e0b;
 }
 
 .alert-danger {
     background: rgba(239, 68, 68, 0.2);
-    color: var(--danger);
-    border-left: 4px solid var(--danger);
+    color: #ef4444;
+    border-left-color: #ef4444;
 }
 
 .alert-info {
     background: rgba(6, 182, 212, 0.2);
-    color: var(--accent-cyan);
-    border-left: 4px solid var(--accent-cyan);
+    color: #06b6d4;
+    border-left-color: #06b6d4;
 }
 
-/* === Футер === */
+
+/* ===== ФОРМИ ===== */
+
+.form-control,
+.form-select {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: 8px;
+    padding: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--accent-1);
+    box-shadow: 0 0 15px rgba(115, 246, 92, 0.3);
+    color: var(--text-main);
+    background: var(--card-bg);
+}
+
+.form-label {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.form-select option {
+    background: var(--bg-secondary);
+    color: var(--text-main);
+}
+
+
+/* ===== ТАБЛИЦІ ===== */
+
+.table {
+    color: var(--text-main);
+}
+
+.table thead {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: white;
+}
+
+.table tbody tr {
+    background: var(--card-bg);
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: var(--hover-bg);
+    transform: scale(1.01);
+}
+
+
+/* ===== ФУТЕР ===== */
+
 .footer-custom {
-    background: rgba(10, 14, 39, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 2px solid var(--accent-purple);
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border-top: 2px solid var(--accent-1);
     padding: 1.5rem 0;
     margin-top: auto;
-    box-shadow: 0 -4px 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 -4px 20px rgba(115, 246, 92, 0.2);
 }
 
 .footer-custom p {
@@ -271,81 +378,466 @@ body {
 }
 
 .footer-link {
-    color: var(--accent-cyan);
+    color: var(--accent-2);
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
 .footer-link:hover {
-    color: var(--accent-purple);
-    text-shadow: 0 0 10px var(--accent-purple);
+    color: var(--accent-1);
 }
 
-.footer-link i {
-    margin-right: 0.3rem;
-    font-size: 1.2rem;
+
+/* ===== ГОЛОВНА СТОРІНКА ===== */
+
+.hero-section {
+    padding: 3rem 0;
+    margin-bottom: 3rem;
 }
 
-/* === Форми === */
-.form-control {
-    background: rgba(21, 26, 48, 0.8);
-    border: 1px solid var(--border-color);
-    color: var(--text-light);
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.hero-title i {
+    color: var(--accent-1);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.stat-card {
+    cursor: pointer;
+}
+
+.stat-icon {
+    font-size: 3rem;
+    color: var(--accent-1);
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.feature-icon {
+    font-size: 4rem;
+    color: var(--accent-2);
+    text-align: center;
+}
+
+.quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: var(--hover-bg);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 0.7rem;
+    color: var(--text-main);
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.form-control:focus {
-    background: rgba(21, 26, 48, 0.9);
-    border-color: var(--accent-purple);
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-    color: var(--text-light);
+.quick-link:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-1);
+    transform: translateX(10px);
+    box-shadow: 0 4px 12px rgba(115, 246, 92, 0.3);
 }
 
-.form-label {
-    color: var(--text-light);
+.quick-link i {
+    font-size: 1.5rem;
+    color: var(--accent-2);
+}
+
+.quick-link span {
     font-weight: 600;
+}
+
+
+/* ===== СТОРІНКА СПИСКІВ ===== */
+
+.page-header {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.page-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 0.5rem;
 }
 
-/* === Таблиці === */
-.table {
-    color: var(--text-light);
+.page-title i {
+    color: var(--accent-1);
+    margin-right: 1rem;
 }
 
-.table thead {
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+.page-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
 }
 
-.table tbody tr {
-    background: rgba(21, 26, 48, 0.5);
+
+/* ===== ПОСИЛАННЯ ===== */
+
+a:not(.btn):not(.nav-link):not(.dropdown-item):not(.quick-link):not(.pagination-link) {
+    color: var(--accent-2);
+    text-decoration: none;
+    font-weight: 700;
     transition: all 0.3s ease;
 }
 
-.table tbody tr:hover {
-    background: rgba(139, 92, 246, 0.2);
-    transform: scale(1.01);
+a:not(.btn):not(.nav-link):not(.dropdown-item):not(.quick-link):not(.pagination-link):hover {
+    color: var(--accent-1);
+    text-shadow: 0 0 10px var(--accent-1);
 }
 
-/* === Адаптивність === */
+
+/* ===== ІКОНКИ ===== */
+
+.card i:not(.dropdown-item i):not(.nav-link i) {
+    color: var(--accent-2);
+}
+
+
+/* ===== BADGE ===== */
+
+.badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+
+/* ===== ВІДЕО/МЕДІА ===== */
+
+.youtube-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(115, 246, 92, 0.3);
+    border: 3px solid var(--accent-2);
+}
+
+.youtube-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+}
+
+
+/* ===== ПАГІНАЦІЯ ===== */
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-custom {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.pagination-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination-link:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(115, 246, 92, 0.3);
+    color: var(--text-main);
+}
+
+.pagination-current {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+
+/* ===== ПОРОЖНІЙ СТАН ===== */
+
+.no-materials {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.no-materials i {
+    font-size: 5rem;
+    color: var(--accent-1);
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.no-materials p {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+
+/* ===== AUTH СТОРІНКИ ===== */
+
+.auth-page,
+.logout-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.auth-card,
+.logout-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.auth-icon,
+.success-icon {
+    font-size: 4rem;
+    color: var(--accent-1);
+    margin-bottom: 1rem;
+}
+
+.success-icon {
+    font-size: 5rem;
+}
+
+.auth-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logout-card {
+    border-color: #10b981;
+}
+
+.logout-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.filters-card {
+    border: 2px solid var(--accent-1);
+    box-shadow: 0 8px 30px rgba(115, 246, 92, 0.3);
+}
+
+.material-card:hover {
+    border-color: var(--accent-1);
+    box-shadow: 0 10px 30px rgba(115, 246, 92, 0.4);
+}
+
+.material-icon {
+    font-size: 2rem;
+    color: var(--accent-2);
+}
+
+.material-icon-large {
+    font-size: 3rem;
+    color: var(--accent-1);
+    animation: pulse 2s infinite;
+}
+
+.material-badge {
+    background: var(--accent-2);
+}
+
+.badge-engine-unity {
+    background: #1a1a1a;
+}
+
+.badge-engine-unreal {
+    background: #0e0e0e;
+    color: #fff;
+}
+
+.badge-engine-godot {
+    background: #478cbf;
+}
+
+.badge-engine-other {
+    background: var(--accent-3);
+}
+
+.material-badge-large {
+    background: var(--accent-2);
+    padding: 0.6rem 1.2rem;
+}
+
+.material-link {
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.material-link:hover {
+    color: var(--accent-1);
+    text-shadow: 0 0 10px var(--accent-1);
+}
+
+.material-category i {
+    color: var(--accent-3);
+}
+
+.category-badge,
+.type-badge {
+    background: rgba(115, 246, 92, 0.2);
+    border: 1px solid var(--accent-1);
+    color: var(--text-main);
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.category-badge i,
+.type-badge i {
+    color: var(--accent-2);
+}
+
+.description-card {
+    border: 2px solid var(--accent-1);
+    box-shadow: 0 8px 30px rgba(115, 246, 92, 0.3);
+}
+
+.content-card {
+    border: 2px solid var(--accent-2);
+    box-shadow: 0 8px 30px rgba(115, 246, 92, 0.3);
+}
+
+.download-icon,
+.external-icon {
+    font-size: 5rem;
+    color: var(--accent-1);
+    margin-bottom: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+.info-item {
+    background: rgba(9, 31, 9, 0.8);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.info-item i {
+    color: var(--accent-2);
+}
+
+.border-accent-1 {
+    border-color: var(--accent-1) !important;
+}
+
+
+/* ===== АДАПТИВНІСТЬ ===== */
+
 @media (max-width: 991px) {
     .navbar-brand {
         font-size: 1.5rem;
     }
-
     .nav-link {
         margin: 0.3rem 0;
         text-align: center;
     }
-
-    .footer-custom .row > div {
-        margin-bottom: 1rem;
+    .theme-toggle {
+        margin: 0.5rem auto;
     }
 }
 
-/* === Анімації === */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .stat-number {
+        font-size: 2rem;
+    }
+    .feature-icon {
+        font-size: 3rem;
+    }
+    .page-title {
+        font-size: 1.8rem;
+    }
+}
+
+
+/* ===== АНІМАЦІЇ ===== */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -361,20 +853,22 @@ body {
     animation: fadeIn 0.6s ease-out;
 }
 
-/* === Скролбар === */
+
+/* ===== СКРОЛБАР ===== */
+
 ::-webkit-scrollbar {
     width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--primary-dark);
+    background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent-purple), var(--accent-cyan));
+    background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+    background: linear-gradient(180deg, var(--accent-2), var(--accent-1));
 }
