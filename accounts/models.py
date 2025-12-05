@@ -24,7 +24,7 @@ class ProfileModel(models.Model):
     nickname = models.TextField(max_length=20)
     about = models.TextField(max_length=5000, null=True, blank=True, default='No Description Provided')
     role = models.CharField(choices=Roles.choices, default=Roles.USER)
-    favourite_genres = models.ManyToManyField(GenreItem, null=True)
+    favourite_genres = models.ManyToManyField(GenreItem, blank=True)
     favourite_game = models.TextField(max_length=50, default='None')
     github_link = models.URLField(max_length=500, null=True)
     profile_picture = models.ImageField()
