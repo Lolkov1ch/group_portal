@@ -1,0 +1,380 @@
+/* ============================================
+   GameDev Club - Темна геймерська тема
+   ============================================ */
+
+/* === Кольорова палітра === */
+:root {
+    --primary-dark: #0a0e27;
+    --secondary-dark: #151a30;
+    --accent-purple: #8b5cf6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --text-light: #e5e7eb;
+    --text-muted: #9ca3af;
+    --border-color: #1f2937;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+/* === Базові стилі === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+    background-attachment: fixed;
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Шапка навігації === */
+.navbar-custom {
+    background: rgba(10, 14, 39, 0.98) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--accent-purple);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+}
+
+.navbar-custom .navbar {
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--text-light) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand i {
+    color: var(--accent-purple);
+    font-size: 2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
+    text-shadow: 0 0 20px var(--accent-purple);
+}
+
+.logo-text {
+    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* === Навігаційні посилання === */
+.nav-link {
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem !important;
+    margin: 0 0.2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-link i {
+    margin-right: 0.4rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.4);
+    color: #ffffff !important;
+}
+
+.nav-link:hover i {
+    transform: scale(1.2);
+}
+
+.nav-link-login {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)) !important;
+    border: none !important;
+    border-radius: 20px;
+    padding: 0.6rem 1.5rem !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.nav-link-login:hover {
+    box-shadow: 0 0 20px var(--accent-purple);
+    transform: translateY(-3px);
+}
+
+.nav-link-profile {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)) !important;
+    border: none !important;
+    border-radius: 20px;
+    padding: 0.6rem 1.5rem !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.nav-link-logout {
+    background: linear-gradient(135deg, var(--accent-pink), var(--danger)) !important;
+    border: none !important;
+    border-radius: 20px;
+    padding: 0.6rem 1.5rem !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-link-logout:hover {
+    box-shadow: 0 0 20px var(--danger);
+    transform: translateY(-3px);
+    color: #ffffff !important;
+}
+
+/* === Кнопка мобільного меню === */
+.navbar-toggler {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 0.75rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.5);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* === Основний контент === */
+.main-content {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/* === Карточки === */
+.card {
+    background: rgba(21, 26, 48, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    border-bottom: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* === Кнопки === */
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--accent-cyan);
+}
+
+/* === Повідомлення === */
+.custom-alert {
+    border-radius: 12px;
+    border: none;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+    border-left: 4px solid var(--warning);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+    border-left: 4px solid var(--danger);
+}
+
+.alert-info {
+    background: rgba(6, 182, 212, 0.2);
+    color: var(--accent-cyan);
+    border-left: 4px solid var(--accent-cyan);
+}
+
+/* === Футер === */
+.footer-custom {
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 2px solid var(--accent-purple);
+    padding: 1.5rem 0;
+    margin-top: auto;
+    box-shadow: 0 -4px 20px rgba(139, 92, 246, 0.3);
+}
+
+.footer-custom p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.footer-link {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--accent-purple);
+    text-shadow: 0 0 10px var(--accent-purple);
+}
+
+.footer-link i {
+    margin-right: 0.3rem;
+    font-size: 1.2rem;
+}
+
+/* === Форми === */
+.form-control {
+    background: rgba(21, 26, 48, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    border-radius: 8px;
+    padding: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: rgba(21, 26, 48, 0.9);
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    color: var(--text-light);
+}
+
+.form-label {
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* === Таблиці === */
+.table {
+    color: var(--text-light);
+}
+
+.table thead {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+}
+
+.table tbody tr {
+    background: rgba(21, 26, 48, 0.5);
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: rgba(139, 92, 246, 0.2);
+    transform: scale(1.01);
+}
+
+/* === Адаптивність === */
+@media (max-width: 991px) {
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+
+    .nav-link {
+        margin: 0.3rem 0;
+        text-align: center;
+    }
+
+    .footer-custom .row > div {
+        margin-bottom: 1rem;
+    }
+}
+
+/* === Анімації === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* === Скролбар === */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-purple), var(--accent-cyan));
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+}
