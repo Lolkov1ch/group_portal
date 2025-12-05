@@ -29,6 +29,7 @@ urlpatterns = [
     path('polls/', include('polls.urls', namespace='polls')),
     path('surveys/', include('surveys.urls', namespace='surveys')),
     path('', include('core.urls', namespace='core')),
+    path('gallery/', include('gallery.urls', namespace='gallery')),
     # path('events/', include('events.urls', namespace='events')),
     # path('portfolio/', include('portfolio.urls', namespace='portfolio')),
 ]
