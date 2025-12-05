@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.conf import settings
 
 # Create your models here.
 class ProfileModel(models.Model):
@@ -18,16 +17,21 @@ class ProfileModel(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='User'
+        related_name='profile'
     )
 
     nickname = models.TextField(max_length=20)
     about = models.TextField(max_length=5000, null=True, blank=True, default='No Description Provided')
     role = models.CharField(choices=Roles.choices, default=Roles.USER)
-    favourite_genres = models.ManyToManyField(GenreItem, null=True)
+    favourite_genres = models.ManyToManyField(GenreItem, blank=True)
+
     favourite_game = models.TextField(max_length=50, default='None')
     github_link = models.URLField(max_length=500, null=True)
-    profile_picture = models.ImageField()
+    profile_picture = models.ImageField(
+    upload_to='profile_pictures/',
+    blank=True   
+)
+
 
 
     class Meta:
@@ -35,4 +39,4 @@ class ProfileModel(models.Model):
         verbose_name_plural = 'users'
 
     def __str__(self):
-        return self.username
+        return self.user.username
