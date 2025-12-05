@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Головна - GameDev Club{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    <!-- Hero секція -->
+    <div class="hero-section text-center mb-5">
+        <h1 class="hero-title mb-3">
+            <i class="fas fa-rocket"></i>
+            Ласкаво просимо до GameDev Club!
+        </h1>
+        <p class="hero-subtitle">
+            Спільнота розробників ігор, де творчість зустрічається з технологіями
+        </p>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row mb-5">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card text-center p-4">
+                <i class="fas fa-users stat-icon"></i>
+                <h3 class="stat-number">500+</h3>
+                <p class="stat-label">Учасників</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card text-center p-4">
+                <i class="fas fa-gamepad stat-icon"></i>
+                <h3 class="stat-number">150+</h3>
+                <p class="stat-label">Проєктів</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card text-center p-4">
+                <i class="fas fa-book stat-icon"></i>
+                <h3 class="stat-number">200+</h3>
+                <p class="stat-label">Матеріалів</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card text-center p-4">
+                <i class="fas fa-calendar-alt stat-icon"></i>
+                <h3 class="stat-number">50+</h3>
+                <p class="stat-label">Подій</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основні розділи -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4 class="card-title">Форум</h4>
+                    <p class="card-text">
+                        Обговорюйте ідеї, діліться досвідом та знаходьте відповіді на свої питання в нашому активному форумі.
+                    </p>
+                    <a href="{% url 'forum:category_list' %}" class="btn btn-primary mt-3">
+                        Перейти до форуму <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h4 class="card-title">Матеріали</h4>
+                    <p class="card-text">
+                        Навчальні матеріали, туторіали, статті та ресурси для розробників ігор всіх рівнів.
+                    </p>
+                    <a href="{% url 'materials:material_list' %}" class="btn btn-primary mt-3">
+                        Переглянути матеріали <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h4 class="card-title">Портфоліо</h4>
+                    <p class="card-text">
+                        Демонструйте свої проєкти, отримуйте фідбек та знаходьте натхнення в роботах інших розробників.
+                    </p>
+                    <a href="#portfolio" class="btn btn-secondary mt-3">
+                        Скоро <i class="fas fa-hourglass-half"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Швидкі посилання -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card quick-links-card">
+                <div class="card-header">
+                    <i class="fas fa-link"></i> Швидкі посилання
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="#events" class="quick-link">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Події та конкурси</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="#polls" class="quick-link">
+                                <i class="fas fa-poll"></i>
+                                <span>Опитування</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="#gallery" class="quick-link">
+                                <i class="fas fa-images"></i>
+                                <span>Галерея</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="https://github.com" target="_blank" class="quick-link">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Стилі для головної сторінки */
+.hero-section {
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+}
+
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.hero-title i {
+    color: var(--accent-purple);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Статистичні карточки */
+.stat-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px) scale(1.05);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    color: var(--accent-purple);
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Feature карточки */
+.feature-card {
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
+}
+
+.feature-icon {
+    font-size: 4rem;
+    color: var(--accent-cyan);
+    text-align: center;
+}
+
+.feature-card .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.feature-card .card-text {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Швидкі посилання */
+.quick-links-card {
+    background: rgba(21, 26, 48, 0.9);
+}
+
+.quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.quick-link:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+    transform: translateX(10px);
+}
+
+.quick-link i {
+    font-size: 1.5rem;
+    color: var(--accent-cyan);
+}
+
+.quick-link span {
+    font-weight: 600;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
