@@ -1,74 +1,377 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Список матеріалів</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-    <form method="get">
-        <select name="category">
-            <option value="">--- Категорія ---</option>
-            {% for cat in categories %}
-                <option value="{{ cat.id }}" {% if active_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.title }}</option>
-            {% endfor %}
-        </select>
+{% block title %}Матеріали - GameDev Club{% endblock %}
 
-        <select name="engine">
-            <option value="">--- Рушій ---</option>
-            {% for code, name in engines %}
-                <option value="{{ code }}" {% if active_engine == code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
+{% block content %}
+<div class="materials-page">
+    <!-- Заголовок сторінки -->
+    <div class="page-header mb-4">
+        <h1 class="page-title">
+            <i class="fas fa-book-open"></i>
+            Навчальні матеріали
+        </h1>
+        <p class="page-subtitle">Відеоуроки, туторіали та корисні ресурси для розробки ігор</p>
+    </div>
 
-        <select name="type">
-            <option value="">--- Тип ---</option>
-            {% for code, name in file_types %}
-                <option value="{{ code }}" {% if active_type == code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
+    <!-- Фільтри -->
+    <div class="card filters-card mb-4">
+        <div class="card-body">
+            <form method="get" class="filters-form">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-layer-group text-accent-cyan"></i> Категорія
+                        </label>
+                        <select name="category" class="form-select">
+                            <option value="">Всі категорії</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if active_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ cat.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-        <button type="submit">Фільтрувати</button>
-        <a href="{% url 'materials:material_list' %}">Скинути</a>
-    </form>
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-gamepad text-accent-purple"></i> Рушій
+                        </label>
+                        <select name="engine" class="form-select">
+                            <option value="">Всі рушії</option>
+                            {% for code, name in engines %}
+                                <option value="{{ code }}" {% if active_engine == code %}selected{% endif %}>
+                                    {{ name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-    <hr>
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-file-alt text-accent-pink"></i> Тип
+                        </label>
+                        <select name="type" class="form-select">
+                            <option value="">Всі типи</option>
+                            {% for code, name in file_types %}
+                                <option value="{{ code }}" {% if active_type == code %}selected{% endif %}>
+                                    {{ name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-    <ul>
-        {% for material in materials %}
-            <li>
-                <i class="{{ material.get_icon }}"></i>
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-filter"></i> Застосувати
+                        </button>
+                        <a href="{% url 'materials:material_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                <a href="{% url 'materials:material_detail' material.pk %}">
-                    {{ material.title }}
+    <!-- Список матеріалів -->
+    <div class="materials-list">
+        {% if materials %}
+            <div class="row g-4">
+                {% for material in materials %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="material-header mb-3">
+                                    <i class="{{ material.get_icon }} material-icon"></i>
+                                    <span class="badge material-badge {{ material.get_badge_color }}">
+                                        {{ material.get_engine_display }}
+                                    </span>
+                                </div>
+
+                                <h5 class="material-title mb-2">
+                                    <a href="{% url 'materials:material_detail' material.pk %}" class="material-link">
+                                        {{ material.title }}
+                                    </a>
+                                </h5>
+
+                                <p class="material-category">
+                                    <i class="fas fa-tag"></i> {{ material.category.title }}
+                                </p>
+
+                                {% if material.description %}
+                                    <p class="material-description">
+                                        {{ material.description|truncatewords:20 }}
+                                    </p>
+                                {% endif %}
+
+                                <a href="{% url 'materials:material_detail' material.pk %}" class="btn btn-sm btn-primary w-100 mt-auto">
+                                    <i class="fas fa-arrow-right"></i> Переглянути
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-materials">
+                <i class="fas fa-inbox"></i>
+                <p>Матеріалів не знайдено</p>
+                <a href="{% url 'materials:material_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Скинути фільтри
                 </a>
+            </div>
+        {% endif %}
+    </div>
 
-                <span class="badge {{ material.get_badge_color }}">
-                    {{ material.get_engine_display }}
-                </span>
-
-                <small>({{ material.category.title }})</small>
-            </li>
-        {% empty %}
-            <p>Матеріалів немає.</p>
-        {% endfor %}
-    </ul>
-
+    <!-- Пагінація -->
     {% if is_paginated %}
-        <div>
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&{{ get_params_except_page }}">Попередня</a>
-            {% endif %}
-            
-            <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        <div class="pagination-wrapper mt-5">
+            <nav>
+                <ul class="pagination-custom">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page=1&{{ get_params_except_page }}" class="pagination-link">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}&{{ get_params_except_page }}" class="pagination-link">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+                    {% endif %}
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&{{ get_params_except_page }}">Наступна</a>
-            {% endif %}
+                    <li class="pagination-current">
+                        Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}&{{ get_params_except_page }}" class="pagination-link">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page={{ page_obj.paginator.num_pages }}&{{ get_params_except_page }}" class="pagination-link">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     {% endif %}
+</div>
 
-</body>
-</html>
+<style>
+/* Заголовок сторінки */
+.page-header {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.page-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.page-title i {
+    color: var(--accent-purple);
+    margin-right: 1rem;
+}
+
+.page-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+/* Фільтри */
+.filters-card {
+    background: rgba(21, 26, 48, 0.95);
+    border: 2px solid var(--accent-purple);
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+}
+
+.filters-form .form-label {
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.filters-form .form-label i {
+    margin-right: 0.5rem;
+}
+
+.filters-form .form-select {
+    background: rgba(10, 14, 39, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 0.6rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.filters-form .form-select:focus {
+    background: rgba(10, 14, 39, 0.9);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+    color: var(--text-light);
+}
+
+.filters-form .form-select option {
+    background: var(--secondary-dark);
+    color: var(--text-light);
+}
+
+/* Картки матеріалів */
+.material-card {
+    background: rgba(21, 26, 48, 0.9);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.material-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-purple);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+}
+
+.material-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.material-icon {
+    font-size: 2rem;
+    color: var(--accent-cyan);
+}
+
+.material-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+}
+
+.material-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.material-link {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.material-link:hover {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.material-category {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.material-category i {
+    color: var(--accent-pink);
+}
+
+.material-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Порожній стан */
+.no-materials {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.no-materials i {
+    font-size: 5rem;
+    color: var(--accent-purple);
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.no-materials p {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Пагінація */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-custom {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.pagination-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(21, 26, 48, 0.9);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination-link:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.4);
+    color: var(--text-light);
+}
+
+.pagination-current {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .filters-form .col-md-3 {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
