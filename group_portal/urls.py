@@ -16,10 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings    
 from django.conf.urls.static import static
-from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('forum/', include('forum.urls', namespace='forum')),
+    path('announcments/', include('announcments.urls', namespace='announcments')),  
+    path('diary/', include('diary.urls', namespace='diary')),
+    path('materials/', include('materials.urls', namespace='materials')),   
+    path('polls/', include('polls.urls', namespace='polls')),
+    path('', include('core.urls', namespace='core')),
+    # path('events/', include('events.urls', namespace='events')),
+    # path('portfolio/', include('portfolio.urls', namespace='portfolio')),   
+    # path('accounts/', include('accounts.urls', namespace='accounts')),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Розкоментуйте коли будете працювати з цими апками

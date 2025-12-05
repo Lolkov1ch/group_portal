@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'diary',
     'forum',
     'materials',
-    'polls'
+    'polls',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +123,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 STATIC_FILES_DIRS =  BASE_DIR / "static"
+
+MEDIA_URL = '/attachments/'
+
+MEDIA_ROOT = BASE_DIR / 'attachments'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
