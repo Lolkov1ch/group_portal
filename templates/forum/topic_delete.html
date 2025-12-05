@@ -1,0 +1,13 @@
+{% block content %}
+<h1>Видалити тему</h1>
+
+<p>Ви впевнені, що хочете видалити тему: <strong>{{ object.title }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">
+        Так, видалити
+    </button>
+    <a href="{% url 'forum:topic_detail' object.pk %}">Скасувати</a>
+</form>
+{% endblock %}

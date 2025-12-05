@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Категорії форуму - GameDev Club{% endblock %}
+
+{% block content %}
+<div class="forum-categories">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-comments"></i> Категорії форуму</h1>
+        {% if user.is_staff %}
+            <a href="{% url 'forum:forum_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Створити форум
+            </a>
+        {% endif %}
+    </div>
+
+    {% if categories %}
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-md-6 mb-4">
+                    <div class="card category-card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <a href="{% url 'forum:topic_list_by_category' category.id %}" class="category-link">
+                                    {{ category.name }}
+                                </a>
+                            </h3>
+                            <p class="card-text text-muted">{{ category.description|default:"Немає опису" }}</p>
+
+                            <div class="category-stats mt-3">
+                                <span class="badge bg-info me-2">
+                                    <i class="fas fa-comments"></i> {{ category.topics_count }} тем
+                                </span>
+                            </div>
+
+                            {% if category.forums.all %}
+                                <div class="forums-list mt-3">
+                                    <strong>Форуми:</strong>
+                                    {% for forum in category.forums.all %}
+                                        <span class="badge bg-secondary">{{ forum.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Категорії поки відсутні
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.category-card {
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-link {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.category-link:hover {
+    color: var(--accent-purple);
+    text-shadow: 0 0 10px var(--accent-purple);
+}
+
+.category-stats .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+}
+</style>
+{% endblock %}

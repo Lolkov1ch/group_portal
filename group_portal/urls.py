@@ -1,0 +1,39 @@
+"""
+URL configuration for group_portal project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings    
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('accounts.urls', namespace='accounts')),
+    path('forum/', include('forum.urls', namespace='forum')),
+    path('announcments/', include('announcments.urls', namespace='announcments')),
+    path('diary/', include('diary.urls', namespace='diary')),
+    path('materials/', include('materials.urls', namespace='materials')),
+    path('polls/', include('polls.urls', namespace='polls')),
+    path('surveys/', include('surveys.urls', namespace='surveys')),
+    path('', include('core.urls', namespace='core')),
+    # path('events/', include('events.urls', namespace='events')),
+    # path('portfolio/', include('portfolio.urls', namespace='portfolio')),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Розкоментуйте коли будете працювати з цими апками
