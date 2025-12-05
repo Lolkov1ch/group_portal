@@ -2,18 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
+
 # Create your models here.
+class GenreItem(models.Model):
+    genre = models.CharField(max_length=200, null=True)
+
+
 class ProfileModel(models.Model):
     class Roles(models.TextChoices):
         USER = 'User'
         STUDENT = 'Student'
         MOD = 'Moderator'
         ADMIN = 'Admin'
-
-
-    class GenreItem(models.Model):
-        genre = models.CharField(max_length=200, null=True)
-
 
     user = models.OneToOneField(
         User,
