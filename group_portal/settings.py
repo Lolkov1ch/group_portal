@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'forum',
     'materials',
     'polls',
+    'surveys',
 ]
 
 MIDDLEWARE = [
