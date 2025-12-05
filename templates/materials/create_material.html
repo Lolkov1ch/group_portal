@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Додати матеріал - GameDev Club{% endblock %}
+
+{% block content %}
+<div class="create-material-page">
+    <div class="card create-card">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                <i class="fas fa-plus-circle create-icon"></i>
+                <h2 class="create-title">Додати новий матеріал</h2>
+                <p class="text-muted">Поділіться корисним ресурсом з іншими розробниками</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="material-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {% if field.name == 'title' %}
+                                <i class="fas fa-heading"></i>
+                            {% elif field.name == 'description' %}
+                                <i class="fas fa-align-left"></i>
+                            {% elif field.name == 'category' %}
+                                <i class="fas fa-layer-group"></i>
+                            {% elif field.name == 'engine' %}
+                                <i class="fas fa-gamepad"></i>
+                            {% elif field.name == 'file_type' %}
+                                <i class="fas fa-file-alt"></i>
+                            {% elif field.name == 'file_link' %}
+                                <i class="fas fa-link"></i>
+                            {% elif field.name == 'file_upload' %}
+                                <i class="fas fa-upload"></i>
+                            {% else %}
+                                <i class="fas fa-circle"></i>
+                            {% endif %}
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="form-text text-muted d-block mt-1">
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in field.errors %}
+                                    <div><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-check"></i> Створити матеріал
+                    </button>
+                    <a href="{% url 'materials:material_list' %}" class="btn btn-secondary w-100">
+                        <i class="fas fa-times"></i> Скасувати
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Сторінка створення */
+.create-material-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.create-card {
+    background: rgba(21, 26, 48, 0.95);
+    border: 2px solid var(--accent-purple);
+    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Іконка заголовка */
+.create-icon {
+    font-size: 4rem;
+    color: var(--accent-purple);
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+.create-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Форма */
+.material-form .form-label {
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.material-form .form-label i {
+    color: var(--accent-cyan);
+    margin-right: 0.5rem;
+}
+
+.material-form input[type="text"],
+.material-form input[type="url"],
+.material-form input[type="file"],
+.material-form textarea,
+.material-form select {
+    background: rgba(10, 14, 39, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.material-form input[type="text"]:focus,
+.material-form input[type="url"]:focus,
+.material-form input[type="file"]:focus,
+.material-form textarea:focus,
+.material-form select:focus {
+    background: rgba(10, 14, 39, 0.9);
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    color: var(--text-light);
+    outline: none;
+}
+
+.material-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.material-form select option {
+    background: var(--secondary-dark);
+    color: var(--text-light);
+}
+
+/* Повідомлення про помилки */
+.text-danger {
+    color: var(--danger) !important;
+}
+
+.text-danger i {
+    margin-right: 0.3rem;
+}
+
+/* Підказки */
+.form-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Кнопки */
+.form-actions {
+    margin-top: 2rem;
+}
+
+.form-actions .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-actions .btn i {
+    margin-right: 0.5rem;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .create-card {
+        max-width: 100%;
+    }
+
+    .create-icon {
+        font-size: 3rem;
+    }
+
+    .create-title {
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+<script>
+// Динамічна зміна доступності полів залежно від типу файлу
+document.addEventListener('DOMContentLoaded', function() {
+    const fileTypeSelect = document.querySelector('select[name="file_type"]');
+    const fileLinkInput = document.querySelector('input[name="file_link"]');
+    const fileUploadInput = document.querySelector('input[name="file_upload"]');
+
+    if (fileTypeSelect && fileLinkInput && fileUploadInput) {
+        function updateFields() {
+            const fileType = fileTypeSelect.value;
+
+            if (fileType === 'file') {
+                // Для завантажуваного файлу
+                fileUploadInput.disabled = false;
+                fileUploadInput.required = true;
+                fileLinkInput.disabled = true;
+                fileLinkInput.required = false;
+            } else {
+                // Для відео або посилання
+                fileUploadInput.disabled = true;
+                fileUploadInput.required = false;
+                fileLinkInput.disabled = false;
+                fileLinkInput.required = true;
+            }
+        }
+
+        fileTypeSelect.addEventListener('change', updateFields);
+        updateFields(); // Ініціалізація при завантаженні
+    }
+});
+</script>
+{% endblock %}
