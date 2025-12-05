@@ -6,14 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-# useless
-
-diary/
-forum/
-materials/
-media/
-polls/
-
 # Distribution / packaging
 .Python
 build/
