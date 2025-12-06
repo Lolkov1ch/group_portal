@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 import os
-from .utils import image_path as task_image_path
+from .utils import image_path
 
 
 class BaseModel(models.Model):
@@ -146,7 +146,7 @@ class Attachment(models.Model):
     ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "pdf", "zip", "rar", "7z", "txt", "mp4"]
     
     post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="attachments")
-    file = models.FileField(upload_to=task_image_path)
+    file = models.FileField(upload_to=image_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
