@@ -92,6 +92,7 @@ class Material(models.Model):
     
     @property
     def youtube_id(self):
+        """Витягує ID YouTube відео з посилання"""
         if not self.file_link:
             return None
         regex = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
