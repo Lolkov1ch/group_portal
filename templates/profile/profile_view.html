@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.nickname }}'s Profile</title>
+</head>
+<body>
+    <p>
+        <strong>
+            Name: {{ user.nickname }}
+        </strong>
+        
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            {{ user.profile_picture }}
+        </strong>
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            Bio:
+            {{ user.about|default:'No Description Provided' }}
+        </strong>
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            Role: {{ user.role }}
+        </strong>
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            Favourite Genres: 
+            {{ user.favourite_genres }}
+        </strong>
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            Favourite Game: {{ user.favourite_game }}
+        </strong>
+    </p>
+    <p>
+    </p>
+    <p>
+        <strong>
+            Github: {{ user.github_link|default:'Не вказано' }}
+        </strong>
+    </p>
+</body>
