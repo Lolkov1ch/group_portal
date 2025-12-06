@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Галерея{% endblock %}
+{% block title %}Наші моменти з ігор та геймджемів{% endblock %}
 
 {% block content %}
 <div>
     <div>
-        <h2>Галерея</h2>
+        <h1>🎮 Наші моменти з ігор та геймджемів</h1>
+        <p>Найкращі скріншоти, фото та відео з наших пригод</p>
+    </div>
+
+    <div>
         <div>
             {% if user.is_authenticated %}
                 <a href="{% url 'gallery:create' %}">
                     <i></i> Додати медіафайл
                 </a>
             {% endif %}
-            
+        </div>
+        <div>
             {% if user.is_staff or user.is_superuser %}
                 <a href="{% url 'gallery:moderation' %}">
                     <i></i> Модерація
@@ -24,32 +29,105 @@
 
     {% if messages %}
         {% for message in messages %}
-            <div role="alert">
+            <div>
                 {{ message }}
-                <button type="button" data-bs-dismiss="alert"></button>
+                <button type="button">Close</button>
             </div>
         {% endfor %}
     {% endif %}
+
+    {% if total_items > 0 %}
+    <div>
+        <div>
+            <div>
+                <h3>{{ total_items }}</h3>
+                <p>Медіафайлів</p>
+            </div>
+            <div>
+                <h3>{{ games|length }}</h3>
+                <p>Ігор</p>
+            </div>
+            <div>
+                <h3>{{ page_obj.paginator.num_pages }}</h3>
+                <p>Сторінок</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div>
+        <form method="get" id="filterForm">
+            <div>
+                <input type="text" 
+                       name="search" 
+                       placeholder="🔍 Пошук по назві, опису або грі..."
+                       value="{{ search_query }}">
+            </div>
+
+            <div>
+                <label><i></i> Тип медіа:</label>
+                <div>
+                    <button type="button" onclick="filterByType('')">
+                        <i></i> Всі
+                    </button>
+                    {% for type_code, type_name in media_types %}
+                        {% if type_code != 'other' and type_code != 'unknown' %}
+                        <button type="button" onclick="filterByType('{{ type_code }}')">
+                            {% if type_code == 'photo' %}
+                                <i></i>
+                            {% elif type_code == 'screenshot' %}
+                                <i></i>
+                            {% elif type_code == 'video' %}
+                                <i></i>
+                            {% endif %}
+                            {{ type_name }}
+                        </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if games %}
+            <div>
+                <label><i></i> Гра:</label>
+                <div>
+                    <button type="button" onclick="filterByGame('')">
+                        Всі ігри
+                    </button>
+                    {% for game in games %}
+                    <button type="button" onclick="filterByGame('{{ game }}')">
+                        {{ game }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <input type="hidden" name="type" id="typeInput" value="{{ current_type }}">
+            <input type="hidden" name="game" id="gameInput" value="{{ current_game }}">
+        </form>
+    </div>
 
     {% if items %}
         <div>
             {% for item in items %}
                 <div>
                     <div>
-                        <a href="{% url 'gallery:detail' item.pk %}">
-                            <div>
+                        <div>
+                            <a href="{% url 'gallery:detail' item.pk %}">
                                 {% if item.is_image %}
-                                    <img src="{{ item.file.url }}" 
-                                         alt="{{ item.title }}"
-                                         class="w-100 h-100"
-                                         style="object-fit: cover;">
+                                    <img src="{{ item.file.url }}" alt="{{ item.title }}">
                                 {% else %}
                                     <div>
                                         <i></i>
                                     </div>
                                 {% endif %}
-                            </div>
-                        </a>
+                            </a>
+                            
+                            <span>
+                                {{ item.get_media_type_display }}
+                            </span>
+                        </div>
                         
                         <div>
                             <h5>
@@ -58,22 +136,24 @@
                                 </a>
                             </h5>
                             
+                            {% if item.description %}
+                                <p>{{ item.description|truncatewords:15 }}</p>
+                            {% endif %}
+                            
                             <div>
                                 <small>
-                                    <i></i> 
-                                    {{ item.author.username|default:"Анонім" }}
+                                    <i></i> {{ item.author.username|default:"Анонім" }}
                                 </small>
+                                <br>
                                 <small>
-                                    {{ item.created_at|date:"d.m.Y" }}
+                                    <i></i> {{ item.created_at|date:"d.m.Y" }}
                                 </small>
                             </div>
 
                             {% if item.game_name %}
-                                <div class="mt-2">
-                                    <span>
-                                        <i></i> {{ item.game_name }}
-                                    </span>
-                                </div>
+                                <span>
+                                    <i></i> {{ item.game_name }}
+                                </span>
                             {% endif %}
                         </div>
                     </div>
@@ -86,10 +166,14 @@
                 <ul>
                     {% if page_obj.has_previous %}
                         <li>
-                            <a class="page-link" href="?page=1">Перша</a>
+                            <a href="?page=1{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_game %}&game={{ current_game }}{% endif %}">
+                                Перша
+                            </a>
                         </li>
                         <li>
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Попередня</a>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_game %}&game={{ current_game }}{% endif %}">
+                                Попередня
+                            </a>
                         </li>
                     {% endif %}
 
@@ -101,10 +185,14 @@
 
                     {% if page_obj.has_next %}
                         <li>
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Наступна</a>
+                            <a href="?page={{ page_obj.next_page_number }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_game %}&game={{ current_game }}{% endif %}">
+                                Наступна
+                            </a>
                         </li>
                         <li>
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Остання</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_game %}&game={{ current_game }}{% endif %}">
+                                Остання
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -113,14 +201,44 @@
     {% else %}
         <div>
             <i></i>
-            Галерея поки що порожня. 
-            {% if user.is_authenticated %}
-                <a href="{% url 'gallery:create' %}">Будьте першим, хто додасть медіафайл!</a>
-            {% else %}
-                Увійдіть, щоб додати свій медіафайл.
+            <h3>Галерея поки що порожня</h3>
+            <p>
+                {% if search_query or current_type or current_game %}
+                    За вашими критеріями нічого не знайдено. Спробуйте змінити фільтри.
+                {% else %}
+                    {% if user.is_authenticated %}
+                        Будьте першим, хто додасть медіафайл!
+                    {% else %}
+                        Увійдіть, щоб додати свій медіафайл.
+                    {% endif %}
+                {% endif %}
+            </p>
+            {% if search_query or current_type or current_game %}
+                <a href="{% url 'gallery:list' %}">
+                    <i></i> Скинути фільтри
+                </a>
             {% endif %}
         </div>
     {% endif %}
 </div>
 
+<script>
+function filterByType(type) {
+    document.getElementById('typeInput').value = type;
+    document.getElementById('filterForm').submit();
+}
+
+function filterByGame(game) {
+    document.getElementById('gameInput').value = game;
+    document.getElementById('filterForm').submit();
+}
+
+let searchTimeout;
+document.querySelector('input[name="search"]').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        document.getElementById('filterForm').submit();
+    }, 500);
+});
+</script>
 {% endblock %}
