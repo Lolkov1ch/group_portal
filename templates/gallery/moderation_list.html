@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Модерація медіафайлів{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <h2>Модерація медіафайлів</h2>
+        <a href="{% url 'gallery:list' %}">
+            <i class="fas fa-arrow-left"></i> До галереї
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div role="alert">
+                {{ message }}
+                <button type="button" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if items %}
+        <div>
+            <i class="fas fa-exclamation-triangle"></i>
+            На розгляді: <strong>{{ items|length }}</strong> медіафайл(ів)
+        </div>
+
+        <div>
+            {% for item in items %}
+                <div>
+                    <div>
+                        <div>
+                            {% if item.is_image %}
+                                <img src="{{ item.file.url }}" 
+                                     alt="{{ item.title }}">
+                            {% else %}
+                                <div>
+                                    <i class="fas fa-video fa-4x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <h5>{{ item.title }}</h5>
+                            
+                            <div>
+                                <small>
+                                    <i class="fas fa-user"></i> 
+                                    {{ item.author.username|default:"Анонім" }}
+                                </small>
+                            </div>
+                            
+                            <div>
+                                <small>
+                                    <i class="fas fa-calendar"></i> 
+                                    {{ item.created_at|date:"d.m.Y H:i" }}
+                                </small>
+                            </div>
+
+                            {% if item.game_name %}
+                                <div>
+                                    <small>
+                                        <i class="fas fa-gamepad"></i> 
+                                        {{ item.game_name }}
+                                    </small>
+                                </div>
+                            {% endif %}
+
+                            {% if item.description %}
+                                <p>
+                                    {{ item.description|truncatewords:20 }}
+                                </p>
+                            {% endif %}
+
+                            <div>
+                                {{ item.get_media_type_display }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div>
+                                <form method="post" 
+                                      action="{% url 'gallery:approve' item.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            onclick="return confirm('Схвалити цей медіафайл?')">
+                                        <i class="fas fa-check"></i> Схвалити
+                                    </button>
+                                </form>
+                                
+                                <form method="post" 
+                                      action="{% url 'gallery:reject' item.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            onclick="return confirm('Відхилити та видалити цей медіафайл?')">
+                                        <i class="fas fa-times"></i> Відхилити
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <a href="{{ item.file.url }}" 
+                               target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Переглянути повний розмір
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Pagination">
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page=1">Перша</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}">Попередня</a>
+                        </li>
+                    {% endif %}
+
+                    <li>
+                        <span>
+                            {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}">Наступна</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">Остання</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div>
+            <i class="fas fa-check-circle"></i>
+            Немає медіафайлів для модерації. Всі файли оброблено!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Галерея{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <h2>Галерея</h2>
+        <div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'gallery:create' %}">
+                    <i></i> Додати медіафайл
+                </a>
+            {% endif %}
+            
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'gallery:moderation' %}">
+                    <i></i> Модерація
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div role="alert">
+                {{ message }}
+                <button type="button" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if items %}
+        <div>
+            {% for item in items %}
+                <div>
+                    <div>
+                        <a href="{% url 'gallery:detail' item.pk %}">
+                            <div>
+                                {% if item.is_image %}
+                                    <img src="{{ item.file.url }}" 
+                                         alt="{{ item.title }}"
+                                         class="w-100 h-100"
+                                         style="object-fit: cover;">
+                                {% else %}
+                                    <div>
+                                        <i></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                        
+                        <div>
+                            <h5>
+                                <a href="{% url 'gallery:detail' item.pk %}">
+                                    {{ item.title }}
+                                </a>
+                            </h5>
+                            
+                            <div>
+                                <small>
+                                    <i></i> 
+                                    {{ item.author.username|default:"Анонім" }}
+                                </small>
+                                <small>
+                                    {{ item.created_at|date:"d.m.Y" }}
+                                </small>
+                            </div>
+
+                            {% if item.game_name %}
+                                <div class="mt-2">
+                                    <span>
+                                        <i></i> {{ item.game_name }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav>
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a class="page-link" href="?page=1">Перша</a>
+                        </li>
+                        <li>
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Попередня</a>
+                        </li>
+                    {% endif %}
+
+                    <li>
+                        <span>
+                            {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Наступна</a>
+                        </li>
+                        <li>
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Остання</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div>
+            <i></i>
+            Галерея поки що порожня. 
+            {% if user.is_authenticated %}
+                <a href="{% url 'gallery:create' %}">Будьте першим, хто додасть медіафайл!</a>
+            {% else %}
+                Увійдіть, щоб додати свій медіафайл.
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Додати медіафайл{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <h2>Додати медіафайл</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div role="alert" class="alert alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div>
+                <div>
+                    <form method="post" enctype="multipart/form-data" id="mediaForm">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div>
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span>*</span>
+                                    {% endif %}
+                                </label>
+                                {{ field }}
+                                
+                                {% if field.help_text %}
+                                    <div>{{ field.help_text }}</div>
+                                {% endif %}
+                                
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div>
+                            <div id="filePreview" style="display: none;">
+                                <label>Попередній перегляд:</label>
+                                <div id="previewContainer" style="max-width: 100%; overflow: hidden;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <strong>⚠️ Увага:</strong> Ваш медіафайл буде розглянуто модератором перед публікацією.
+                        </div>
+
+                        <div>
+                            <button type="submit">
+                                📤 Завантажити
+                            </button>
+                            <a href="{% url 'gallery:list' %}">
+                                ❌ Скасувати
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <h5>📋 Вимоги до файлів</h5>
+                </div>
+                <div>
+                    <ul>
+                        <li><strong>Максимальний розмір:</strong> 20 МБ</li>
+                        <li><strong>Дозволені формати зображень:</strong> PNG, JPG, JPEG, GIF</li>
+                        <li><strong>Дозволені формати відео:</strong> MP4, MOV, AVI, MKV, WEBM</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const previewDiv = document.getElementById('filePreview');
+    const previewContainer = document.getElementById('previewContainer');
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    previewContainer.innerHTML = '';
+                    
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.style.maxHeight = '300px';
+                        img.style.maxWidth = '100%';
+                        previewContainer.appendChild(img);
+                    } else if (file.type.startsWith('video/')) {
+                        const video = document.createElement('video');
+                        video.src = event.target.result;
+                        video.controls = true;
+                        video.style.maxHeight = '300px';
+                        video.style.maxWidth = '100%';
+                        previewContainer.appendChild(video);
+                    }
+                    
+                    const info = document.createElement('p');
+                    info.textContent = `Файл: ${file.name} (${fileSize} МБ)`;
+                    previewContainer.appendChild(info);
+                    
+                    previewDiv.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(file);
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

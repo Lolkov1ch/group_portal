@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ item.title }}{% endblock %}
+
+{% block content %}
+<div>
+    <h2>{{ item.title }}</h2>
+
+    <div>
+        {% if item.is_image %}
+            <img src="{{ item.file.url }}" alt="{{ item.title }}">
+        {% else %}
+            <video controls>
+                <source src="{{ item.file.url }}" type="video/mp4">
+                Ваш браузер не підтримує відео.
+            </video>
+        {% endif %}
+    </div>
+
+    {% if item.description %}
+        <h5>Опис</h5>
+        <p>{{ item.description }}</p>
+    {% endif %}
+
+    <h5>Інформація</h5>
+    <p><strong>Автор:</strong> {{ item.author.username|default:"Анонім" }}</p>
+    <p><strong>Дата:</strong> {{ item.created_at|date:"d.m.Y H:i" }}</p>
+    <p><strong>Тип:</strong> {{ item.get_media_type_display }}</p>
+    
+    {% if item.game_name %}
+        <p><strong>Гра:</strong> {{ item.game_name }}</p>
+    {% endif %}
+
+    <div>
+        <a href="{{ item.file.url }}" download>📥 Завантажити</a>
+        <span> | </span>
+        <a href="{% url 'gallery:list' %}">⬅️ Назад до галереї</a>
+        
+        {% if user.is_authenticated %}
+            {% if user == item.author or user.is_staff or user.is_superuser %}
+                <span> | </span>
+                <a href="{% url 'gallery:delete' item.pk %}">🗑️ Видалити</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
