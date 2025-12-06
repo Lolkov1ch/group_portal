@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import os
+import logging
 from gallery.utils import gallery_image_path
+
+logger = logging.getLogger(__name__)
 
 
 class MediaItem(models.Model):
@@ -20,6 +23,8 @@ class MediaItem(models.Model):
         "mp4", "mov", "avi", "mkv",
         "webm"
     ]
+
+    IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "gif"]
 
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200)
@@ -48,32 +53,43 @@ class MediaItem(models.Model):
                 f"Дозволені: {', '.join(self.ALLOWED_EXTENSIONS)}"
             )
 
-        if self.file.size > 20 * 1024 * 1024:
-            raise ValidationError("Розмір файлу не може перевищувати 20 МБ.")
-
-    def save(self, *args, **kwargs):
-        self.full_clean() 
-        super().save(*args, **kwargs)
+        if hasattr(self.file, 'size') and self.file.size > 20 * 1024 * 1024:
+            raise ValidationError(
+                "Файл занадто великий. Максимальний розмір: 20 МБ"
+            )
 
     def is_image(self):
         if not self.file:
             return False
         ext = self.file.name.split(".")[-1].lower()
-        return ext in ["png", "jpg", "jpeg", "gif"]
+        return ext in self.IMAGE_EXTENSIONS
 
     def delete(self, *args, **kwargs):
         if self.file:
             try:
-                if os.path.isfile(self.file.path):
-                    os.remove(self.file.path)
+                file_path = self.file.path
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    logger.info(f"Файл видалено: {file_path}")
+                    
+                    folder_path = os.path.dirname(file_path)
+                    if os.path.exists(folder_path) and not os.listdir(folder_path):
+                        os.rmdir(folder_path)
+                        logger.info(f"Папка видалена: {folder_path}")
+                        
             except Exception as e:
-                print(f"Помилка при видаленні файлу: {e}")
+                logger.error(f"Помилка при видаленні файлу: {e}")
 
         super().delete(*args, **kwargs)
 
     class Meta:
         verbose_name = "Медіафайл"
         verbose_name_plural = "Медіафайли"
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['is_approved', '-created_at']),
+        ]
 
     def __str__(self):
         return self.title
