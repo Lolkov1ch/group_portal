@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('profile/<int:pk>', UserDetailView.as_view(), name='user_details'),
+    path('profile/edit/<int:pk>', UserUpdateView.as_view(), name='user_update'),
 ]

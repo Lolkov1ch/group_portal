@@ -9,15 +9,19 @@ from .mixins import *
 from .forms import *
 # Create your views here.
 
+
 class UserDetailView(DetailView):
     model = ProfileModel
     context_object_name = 'user'
     template_name = 'profile/profile_view.html'
 
+
 class UserUpdateView(LoginRequiredMixin, AbleToUpdateMixin, UpdateView):
     models = ProfileModel
     form = UserForm
-    pass
+    template_name = 'profile/profile_edit.html'
+    success_url = reverse_lazy('profile:profile_view')
+
 
 class RegisterView(CreateView):
     template_name = 'registration/register.html'

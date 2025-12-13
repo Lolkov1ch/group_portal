@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.nickname }}</title>
+</head>
+<body>
+    {% block content %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">
+                Save
+            </button>
+        </form>
+
+        <p>
+            <a href="{% url 'profile:profile_view' %}">
+                <button>
+                    Back
+                </button>
+            </a>
+        </p>
+    {% endblock %}
+</body>

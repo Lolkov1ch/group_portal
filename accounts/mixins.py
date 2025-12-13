@@ -10,8 +10,18 @@ class AbleToUpdateMixin(object):
     
 
 class IsAdminMixin(object):
+        
+    
     def dispatch(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance != ProfileModel.Roles.MOD or instance != ProfileModel.Roles.ADMIN:
-            raise PermissionDenied('You cant change This! You have no permissions!\n Error 403')
+        if instance != ProfileModel.Roles.ADMIN:
+            raise PermissionDenied('You have no permissions!\n Error 403')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class IsModeratorMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance != ProfileModel.Roles.MOD:
+            raise PermissionDenied('You have no permissions!\n Error 403')
         return super().dispatch(request, *args, **kwargs)

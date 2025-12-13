@@ -38,7 +38,7 @@
     <p>
         <strong>
             Favourite Genres: 
-            {{ user.favourite_genres }}
+            {{ user.favourite_genres|default:'None'}}
         </strong>
     </p>
     <p>
@@ -54,5 +54,12 @@
         <strong>
             Github: {{ user.github_link|default:'Не вказано' }}
         </strong>
+    </p>
+    <p>
+        <a href=>
+            <button>
+                Edit Profile
+            </button>
+        </a>
     </p>
 </body>
