@@ -126,3 +126,39 @@ class GradeDeleteView(LoginRequiredMixin, TeacherRequiredMixin, DeleteView):
         response = super().delete(request, *args, **kwargs)
         messages.success(request, "Оцінку успішно видалено")
         return response
+    
+
+class StudentGradeListView(LoginRequiredMixin, ListView):
+    model = Grade
+    template_name = "diary/student_grade_list.html"
+    context_object_name = "grades"
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Grade.objects.filter(student=self.request.user).select_related('subject', 'teacher')
+
+        subject_id = self.request.GET.get('subject')
+        date_from = self.request.GET.get('date_from')
+        date_to = self.request.GET.get('date_to')
+
+        # Фільтрація
+        if subject_id:
+            queryset = queryset.filter(subject__id=subject_id)
+            
+        if date_from:
+            queryset = queryset.filter(created_at__date__gte=date_from)
+            
+        if date_to:
+            queryset = queryset.filter(created_at__date__lte=date_to)
+
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["subjects"] = Subject.objects.all()
+
+        context['active_subject'] = self.request.GET.get('subject')
+        context['active_date_from'] = self.request.GET.get('date_from')
+        context['active_date_to'] = self.request.GET.get('date_to')
+        
+        return context
