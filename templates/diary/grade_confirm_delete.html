@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Підтвердження видалення</title>
+</head>
+<body>
+
+    <h1>Видалити оцінку?</h1>
+    
+    <div style="border: 1px solid red; padding: 15px; max-width: 600px;">
+        <p>Ви впевнені, що хочете видалити цей запис?</p>
+        
+        <ul>
+            <li><strong>Учень:</strong> {{ object.student.username }}</li>
+            <li><strong>Предмет:</strong> {{ object.subject.name }}</li>
+            <li><strong>Оцінка:</strong> {{ object.score }}</li>
+            <li><strong>Дата:</strong> {{ object.created_at|date:"d.m.Y" }}</li>
+        </ul>
+    </div>
+
+    <br>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="color: red;">Так, видалити</button>
+        <a href="{% url 'diary:grade_list' %}">Ні, повернутися назад</a>
+    </form>
+
+</body>
+</html>

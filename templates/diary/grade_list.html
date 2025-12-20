@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Щоденник викладача</title>
+</head>
+<body>
+
+    <h1>Щоденник викладача</h1>
+
+    <p>
+        <a href="/">На головну</a>
+    </p>
+
+    {% if messages %}
+        <ul style="color: green;">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'diary:grade_create' %}"><strong>[+] Додати нову оцінку</strong></a>
+    </p>
+
+    <hr>
+
+    <form method="get">
+        <h3>Фільтри:</h3>
+        
+        <label>Учень:</label>
+        <select name="student">
+            <option value="">-- Всі учні --</option>
+            {% for student in students %}
+                <option value="{{ student.id }}" {% if active_student == student.id|stringformat:"s" %}selected{% endif %}>
+                    {{ student.username }}
+                </option>
+            {% endfor %}
+        </select>
+
+        &nbsp;
+
+        <label>Предмет:</label>
+        <select name="subject">
+            <option value="">-- Всі предмети --</option>
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}" {% if active_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                    {{ subject.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        &nbsp;
+
+        <label>З дати:</label>
+        <input type="date" name="date_from" value="{{ active_date_from }}">
+
+        <label>По дату:</label>
+        <input type="date" name="date_to" value="{{ active_date_to }}">
+
+        <br><br>
+
+        <button type="submit">Застосувати фільтр</button>
+        <a href="{% url 'diary:grade_list' %}?reset=true">Скинути</a>
+    </form>
+
+    <hr>
+
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr style="background-color: #f0f0f0;">
+                <th>Учень</th>
+                <th>Предмет</th>
+                <th>Оцінка</th>
+                <th>Дата</th>
+                <th>Коментар</th>
+                <th>Викладач</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+            <tr>
+                <td>{{ grade.student.username }}</td>
+                <td>{{ grade.subject.name }}</td>
+                <td><strong>{{ grade.score }}</strong></td>
+                <td>{{ grade.created_at|date:"d.m.Y H:i" }}</td>
+                <td>{{ grade.comment|default:"-" }}</td>
+                <td>{{ grade.teacher.username|default:"Невідомо" }}</td>
+                <td>
+                    <a href="{% url 'diary:grade_update' grade.pk %}">Редагувати</a> | 
+                    <a href="{% url 'diary:grade_delete' grade.pk %}">Видалити</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" align="center">Записів не знайдено.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <div style="margin-top: 20px; text-align: center;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">&laquo; Попередня</a>
+        {% endif %}
+        
+        <span>Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Наступна &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Редагування{% else %}Додавання{% endif %} оцінки</title>
+</head>
+<body>
+
+    <h1>
+        {% if form.instance.pk %}
+            Редагування оцінки
+        {% else %}
+            Додавання нової оцінки
+        {% endif %}
+    </h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <br>
+        <button type="submit">Зберегти</button>
+        <a href="{% url 'diary:grade_list' %}">Скасувати</a>
+    </form>
+
+</body>
+</html>
