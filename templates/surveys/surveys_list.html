@@ -5,18 +5,78 @@
 
 {% block content %}
 <div class="surveys-page">
+    <!-- Заголовок сторінки -->
     <div class="page-header mb-4">
         <h1 class="page-title">
             <i class="fas fa-poll-h"></i>
-            Опитування
+            Система опитувань GameDev Club
         </h1>
-        <p class="page-subtitle">Тестова сторінка - список опитувань</p>
+        <p class="page-subtitle">Поділіться своєю думкою та допоможіть покращити наш клуб</p>
     </div>
+{% endblock content %}
+    <!-- Список опитувань -->
+    <div class="surveys-list">
+        {% if surveys %}
+            <div class="row g-4">
+                {% for survey in surveys %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card survey-card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="survey-header mb-3">
+                                    <i class="fas fa-poll survey-icon"></i>
+                                    {% if survey.is_active %}
+                                        <span class="badge survey-badge badge-active">
+                                            <i class="fas fa-check-circle"></i> Активне
+                                        </span>
+                                    {% endif %}
+                                </div>
 
-    <div class="card">
-        <div class="card-body">
-            <p>Тут буде список опитувань</p>
-        </div>
+                                <h5 class="survey-title mb-3">
+                                    {{ survey.title }}
+                                </h5>
+
+                                {% if survey.description %}
+                                    <p class="survey-description mb-3">
+                                        {{ survey.description|truncatewords:25 }}
+                                    </p>
+                                {% endif %}
+
+                                <div class="survey-meta mb-3">
+                                    {% if survey.start_date %}
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>Старт: {{ survey.start_date|date:"d.m.Y" }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if survey.end_date %}
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-times"></i>
+                                            <span>Кінець: {{ survey.end_date|date:"d.m.Y" }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if survey.created_by %}
+                                        <div class="meta-item">
+                                            <i class="fas fa-user"></i>
+                                            <span>{{ survey.created_by.username }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <a href="{% url 'surveys:detail' survey.pk %}" class="btn btn-primary w-100 mt-auto">
+                                    <i class="fas fa-arrow-right"></i> Пройти опитування
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-surveys">
+                <i class="fas fa-inbox"></i>
+                <p>Наразі немає активних опитувань</p>
+                <p class="text-muted">Зверніться пізніше або зв'яжіться з адміністрацією клубу</p>
+            </div>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
+
